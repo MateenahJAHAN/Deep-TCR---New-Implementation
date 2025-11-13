@@ -25,8 +25,28 @@ from pathlib import Path
 # CONFIGURATION - Simple variables you can understand
 # ============================================================================
 
-# Where the data should be located
-DATA_DIR = Path("DeepTCR_Cancer-master/Data")
+# Where the data should be located (try multiple common layouts)
+SCRIPT_DIR = Path(__file__).resolve().parent
+REPO_ROOT = SCRIPT_DIR.parent
+
+def _find_data_root():
+    """
+    Try common data locations relative to both the repo root and the scripts directory.
+    This supports the project shipping data inside `data/` as well as alongside the repo.
+    """
+    candidate_dirs = [
+        REPO_ROOT / "data" / "DeepTCR_Cancer-master" / "Data",
+        REPO_ROOT / "DeepTCR_Cancer-master" / "Data",
+        SCRIPT_DIR / "data" / "DeepTCR_Cancer-master" / "Data",
+        SCRIPT_DIR / "DeepTCR_Cancer-master" / "Data",
+    ]
+
+    for candidate in candidate_dirs:
+        if candidate.exists():
+            return candidate
+    return candidate_dirs[0]
+
+DATA_DIR = _find_data_root()
 YOST_DATA_DIR = DATA_DIR / "yost" / "data"
 RESPONSE_FILE = DATA_DIR / "yost" / "response.csv"
 
@@ -421,6 +441,7 @@ def main():
     print("="*70)
     print("\nThis script will help you set up the DeepTCR learning project.")
     print("It will check data files, install packages, and test everything.\n")
+    print("Tip: If `python` is not recognised on your system, run this script with `python3`.")
     
     # Step 1: Check data files
     data_ok = check_data_files()
