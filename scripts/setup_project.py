@@ -285,6 +285,14 @@ def install_packages():
         if install_package(package):
             success_count += 1
     
+    # Invalidate import caches after installation
+    # This ensures Python recognizes newly installed packages
+    import importlib
+    import sys
+    if hasattr(importlib, 'invalidate_caches'):
+        importlib.invalidate_caches()
+        print("\n✓ Invalidated Python import caches (ensures new packages are recognized)")
+    
     # Test all packages again
     print("\n" + "-"*70)
     print("Testing all packages...")
