@@ -9,6 +9,7 @@ This script sets up the DeepTCR project by:
 3. Installing required packages
 4. Testing the setup
 
+This script complements Day_01_Setup notebook.
 Run this script to get started:
     python setup_project.py
 
@@ -364,12 +365,21 @@ Now that everything is set up, here's what you can do:
    - Calculate some basic statistics
    - Create visualizations
 
-2. READ THE LEARNING GUIDES:
-   Start with these files (in order):
-   - pandas_to_deeptcr_guide.md (bridges your pandas knowledge)
-   - dataset_exploration_guide.md (explains the data structure)
-   - deeptcr_architecture.md (explains how the model works)
-   - LEARNING_ROADMAP.md (your complete learning path)
+2. FOLLOW THE DAY-BY-DAY PLAN:
+   Start with Day 0 and work through Day 11:
+   - Day_00_Getting_Started/ - Learn Jupyter/Colab basics
+   - Day_01_Setup/ - Install packages (this script helps!)
+   - Day_02_Explore_Data/ - Explore TCR data files
+   - Day_03_Clean_Data/ - Clean and prepare data
+   - Day_04_Understand_Data/ - Statistics and visualizations
+   - Day_05_Encode_Sequences/ - Convert strings to numbers
+   - Day_06_Multiple_Patients/ - Work with multiple patients
+   - Day_07_Simple_ML/ - Try simple ML baselines
+   - Day_08_Understand_MIL/ - Learn Multiple Instance Learning
+   - Day_08.5_DeepTCR_Architecture/ - Understand DeepTCR architecture
+   - Day_09_DeepTCR_Setup/ - Install DeepTCR package
+   - Day_10_Run_DeepTCR/ - Train and evaluate DeepTCR
+   - Day_11_Attention_Analysis/ - Analyze attention weights
 
 3. TRY THE EXAMPLES:
    Modify tcr_explorer.py to:

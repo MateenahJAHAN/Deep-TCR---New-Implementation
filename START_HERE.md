@@ -68,8 +68,10 @@ DeepTCR_Learning/
 ├── Day_06_Multiple_Patients/   📅 Day 6: Work with many patients
 ├── Day_07_Simple_ML/            📅 Day 7: Try simple machine learning
 ├── Day_08_Understand_MIL/       📅 Day 8: Learn Multiple Instance Learning
+├── Day_08.5_DeepTCR_Architecture/ 📅 Day 8.5: DeepTCR Architecture
 ├── Day_09_DeepTCR_Setup/        📅 Day 9: Set up DeepTCR package
 ├── Day_10_Run_DeepTCR/         📅 Day 10: Run the actual model
+├── Day_11_Attention_Analysis/   📅 Day 11: Attention weight analysis
 │
 ├── data/                       📊 All data files
 └── guides/                     📚 Detailed guides (read as needed)
@@ -154,6 +156,13 @@ DeepTCR_Learning/
 - Learn about attention mechanism
 - **Time:** 2-3 hours
 
+**Day 8.5: DeepTCR Architecture** 🏗️
+- Understand DeepTCR's neural network architecture
+- Learn how attention mechanism works in detail
+- Understand what "concepts" are (`num_concepts=64`)
+- Trace forward pass (how data flows)
+- **Time:** 2-3 hours
+
 **Day 9: DeepTCR Setup** 📦
 - Install DeepTCR package
 - Understand DeepTCR format
@@ -161,10 +170,18 @@ DeepTCR_Learning/
 - **Time:** 2 hours
 
 **Day 10: Run DeepTCR** 🚀
-- Train the model
-- Make predictions
-- Evaluate results
+- Train the model (`Monte_Carlo_CrossVal()`)
+- Make predictions (`Sample_Inference()`)
+- Evaluate results (AUC ~0.82)
+- Extract attention weights
 - **Time:** 3 hours
+
+**Day 11: Attention Analysis** 🔍
+- Analyze attention weights
+- Rank sequences by importance
+- Compare responders vs non-responders
+- Identify top predictive sequences
+- **Time:** 2-3 hours
 
 ---
 
@@ -234,7 +251,7 @@ Before starting, make sure you:
 - [ ] Know pandas basics (`pd.read_csv()`, `df.head()`, etc.)
 - [ ] Know numpy basics (`np.array()`, `arr.shape`, etc.)
 - [ ] Know sklearn basics (`train_test_split()`, simple models)
-- [ ] Have 2-3 hours per day for 10 days
+- [ ] Have 2-3 hours per day for 11 days (including Day 8.5 and Day 11)
 - [ ] Are ready to learn and experiment!
 
 ---
@@ -252,7 +269,7 @@ Before starting, make sure you:
 ### Q: How long will this take?
 **A:** 
 - Each day: 2-3 hours
-- Total: ~20-30 hours over 10 days
+- Total: ~25-35 hours over 11 days (including Day 8.5 and Day 11)
 - Don't rush! Understanding is more important than speed
 
 ### Q: Do I need to know deep learning?

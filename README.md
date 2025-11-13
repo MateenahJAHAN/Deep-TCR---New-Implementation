@@ -35,7 +35,7 @@ You're reading it now! This explains what the project is about.
 4. Run each cell to see results
 
 ### Step 3: Follow Day-by-Day Plan
-- Work through Days 0-10 in order
+- Work through Days 0-11 in order
 - Each day has a **Jupyter Notebook** (.ipynb file)
 - Each notebook has:
   - **Markdown cells** - explanations and instructions
@@ -88,8 +88,10 @@ DeepTCR_Learning/
 ├── Day_06_Multiple_Patients/    📅 Day 6: Multiple patients
 ├── Day_07_Simple_ML/           📅 Day 7: Simple ML baselines
 ├── Day_08_Understand_MIL/      📅 Day 8: Multiple Instance Learning
+├── Day_08.5_DeepTCR_Architecture/ 📅 Day 8.5: DeepTCR Architecture
 ├── Day_09_DeepTCR_Setup/       📅 Day 9: Install DeepTCR
 ├── Day_10_Run_DeepTCR/         📅 Day 10: Train model
+├── Day_11_Attention_Analysis/  📅 Day 11: Attention weight analysis
 │
 ├── data/                       📊 All data files
 │   └── DeepTCR_Cancer-master/
@@ -172,6 +174,14 @@ DeepTCR_Learning/
 - Understand need for attention
 - **Time:** 2-3 hours
 
+### Day 8.5: DeepTCR Architecture 🏗️
+**Goal:** Understand how DeepTCR's neural network works
+- Learn network architecture (layers)
+- Understand attention mechanism in detail
+- Understand what "concepts" are (`num_concepts=64`)
+- Trace forward pass (how data flows)
+- **Time:** 2-3 hours
+
 ### Day 9: DeepTCR Setup 📦
 **Goal:** Install DeepTCR package
 - Install DeepTCR
@@ -181,11 +191,19 @@ DeepTCR_Learning/
 
 ### Day 10: Run DeepTCR 🚀
 **Goal:** Train the actual model
-- Train DeepTCR model
-- Make predictions
+- Train DeepTCR model (`Monte_Carlo_CrossVal()`)
+- Make predictions (`Sample_Inference()`)
 - Evaluate AUC (target ~0.82)
 - Extract attention weights
 - **Time:** 3 hours
+
+### Day 11: Attention Analysis 🔍
+**Goal:** Understand which sequences predict response
+- Extract and analyze attention weights
+- Rank sequences by importance
+- Compare responders vs non-responders
+- Identify top predictive sequences
+- **Time:** 2-3 hours
 
 ---
 
@@ -329,7 +347,7 @@ y = 1                    # ONE label (responder or not)
 ### Q: How long will this take?
 **A:** 
 - Each day: 2-3 hours
-- Total: ~20-30 hours over 10 days
+- Total: ~25-35 hours over 11 days (including Day 8.5 and Day 11)
 - Don't rush! Understanding is more important than speed
 
 ### Q: Do I need to know deep learning?

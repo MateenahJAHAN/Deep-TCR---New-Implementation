@@ -3,11 +3,14 @@ TCR-seq Data Explorer
 =====================
 A beginner-friendly script to explore TCR sequencing data
 
-This script demonstrates:
-1. Loading TCR-seq files (what you know: pd.read_csv)
-2. Data cleaning (what you know: filtering, groupby)
-3. Basic statistics (what you know: pandas aggregations)
-4. Sequence encoding (new: converting strings to numbers)
+This script demonstrates concepts from Days 2-5:
+- Day 2: Loading TCR-seq files (pd.read_csv)
+- Day 3: Data cleaning (filtering, groupby)
+- Day 4: Basic statistics (pandas aggregations)
+- Day 5: Sequence encoding (converting strings to numbers)
+
+This script complements the Jupyter Notebooks in Day_02 through Day_05.
+Use it as a reference or to practice what you learned!
 
 Author: Learning Guide for DeepTCR Paper
 Run this after extracting DeepTCR_Cancer-master.zip
@@ -460,7 +463,28 @@ def main():
     
     # File path (modify this to your data location)
     # Default path assumes data is extracted in DeepTCR_Cancer-master directory
-    file_path = 'DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv'
+    # Try multiple possible paths (for different environments)
+    possible_paths = [
+        'DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv',
+        'data/DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv',
+        '../data/DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv',
+        './data/DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv',
+    ]
+    
+    file_path = None
+    for path in possible_paths:
+        if Path(path).exists():
+            file_path = path
+            break
+    
+    if file_path is None:
+        print(f"\n❌ Error: Could not find data file!")
+        print(f"  Tried paths:")
+        for path in possible_paths:
+            print(f"    - {path}")
+        print(f"\nMake sure you've extracted DeepTCR_Cancer-master.zip")
+        print(f"And update the file_path variable in main()")
+        return
     
     try:
         # Step 1: Load data
@@ -495,10 +519,12 @@ def main():
         print("  4. Explore the encoding in more detail")
         print("\n✓ Script completed successfully!")
         
-    except FileNotFoundError:
+    except FileNotFoundError as e:
         print(f"\n❌ Error: Could not find file: {file_path}")
+        print(f"  Details: {e}")
         print("\nMake sure you've extracted DeepTCR_Cancer-master.zip")
         print("And update the file_path variable in main()")
+        print("\n💡 For Google Colab: Upload data to /content/data/")
     
     except Exception as e:
         print(f"\n❌ Error: {str(e)}")
@@ -528,12 +554,54 @@ def load_multiple_patients(data_dir='DeepTCR_Cancer-master/Data/yost/data', resp
     import glob
     from pathlib import Path
     
+    # Try multiple possible paths for data_dir
+    possible_data_dirs = [
+        data_dir,
+        f'data/{data_dir}',
+        f'../data/{data_dir}',
+        f'./data/{data_dir}',
+    ]
+    
+    actual_data_dir = None
+    for path in possible_data_dirs:
+        if Path(path).exists():
+            actual_data_dir = path
+            break
+    
+    if actual_data_dir is None:
+        print(f"❌ Error: Could not find data directory!")
+        print(f"  Tried: {possible_data_dirs}")
+        return []
+    
+    # Try multiple possible paths for response_file
+    possible_response_files = [
+        response_file,
+        f'data/{response_file}',
+        f'../data/{response_file}',
+        f'./data/{response_file}',
+    ]
+    
+    actual_response_file = None
+    for path in possible_response_files:
+        if Path(path).exists():
+            actual_response_file = path
+            break
+    
+    if actual_response_file is None:
+        print(f"❌ Error: Could not find response file!")
+        print(f"  Tried: {possible_response_files}")
+        return []
+    
     # Load response labels
-    response_df = pd.read_csv(response_file)
+    try:
+        response_df = pd.read_csv(actual_response_file)
+    except Exception as e:
+        print(f"❌ Error loading response file: {e}")
+        return []
     response_dict = dict(zip(response_df['patient_id'], response_df['response']))
     
     # Get all pre-treatment tumor files (BCC or SCC)
-    pattern = str(Path(data_dir) / '*_[BS]CC_pre*_TCRB.tsv')
+    pattern = str(Path(actual_data_dir) / '*_[BS]CC_pre*_TCRB.tsv')
     files = glob.glob(pattern)
     
     print(f"Found {len(files)} patient files")
@@ -546,9 +614,19 @@ def load_multiple_patients(data_dir='DeepTCR_Cancer-master/Data/yost/data', resp
         patient_id = filename.split('_')[0]
         
         # Load and clean
-        df = pd.read_csv(file_path, sep='\t')
-        productive = df[df['frame_type'] == 'In']
-        df_clean = clean_tcr_data(productive)
+        try:
+            df = pd.read_csv(file_path, sep='\t')
+            # Handle different column names (from Day 2-3 learning!)
+            col_map = get_column_mapping(df)
+            frame_col = col_map.get('frame_type', 'sequenceStatus')
+            if frame_col not in df.columns:
+                frame_col = 'frame_type'  # fallback
+            
+            productive = df[df[frame_col] == 'In'] if frame_col in df.columns else df
+            df_clean = clean_tcr_data(productive)
+        except Exception as e:
+            print(f"  ✗ Error loading {filename}: {e}")
+            continue
         
         # Get label
         response = response_dict.get(patient_id, 'Unknown')
