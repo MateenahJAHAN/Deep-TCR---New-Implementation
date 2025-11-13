@@ -18,6 +18,62 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+
+def get_default_data_file():
+    """
+    Find the example patient file inside the downloaded dataset.
+
+    We look in two places:
+      1. Data/yost/data/...  (if you run script from inside the dataset folder)
+      2. DeepTCR_Cancer-master/Data/yost/data/...  (if dataset sits next to this script)
+    """
+    candidates = [
+        Path('Data') / 'yost' / 'data' / 'su001_BCC_pre1_TCRB.tsv',
+        Path('DeepTCR_Cancer-master') / 'Data' / 'yost' / 'data' / 'su001_BCC_pre1_TCRB.tsv',
+    ]
+
+    for path in candidates:
+        if path.exists():
+            return str(path)
+
+    raise FileNotFoundError(
+        "Could not find the example file. Please update file_path in main() "
+        "to point to one of the TSV files from the DeepTCR_Cancer dataset."
+    )
+
+
+def standardize_columns(df):
+    """
+    Rename dataset columns to simple lowercase names the rest of the script expects.
+
+    The raw TSV files use verbose names such as 'count (templates/reads)'.
+    We translate them to concise labels like 'templates' so the downstream
+    pandas code looks clean and familiar.
+    """
+    column_map = {
+        'aminoAcid': 'amino_acid',
+        'amino_acid': 'amino_acid',
+        'vGeneName': 'v_gene',
+        'jGeneName': 'j_gene',
+        'count (templates/reads)': 'templates',
+        'templates': 'templates',
+        'frequencyCount (%)': 'productive_frequency',
+        'productiveFrequency (%)': 'productive_frequency',
+        'productiveFrequency': 'productive_frequency',
+        'sequenceStatus': 'frame_type',
+        'frameType': 'frame_type',
+    }
+
+    df = df.rename(columns={old: new for old, new in column_map.items() if old in df.columns})
+
+    # Convert percentage values to 0-1 range if needed
+    if 'productive_frequency' in df.columns:
+        freq = df['productive_frequency']
+        if freq.max() > 1:
+            df['productive_frequency'] = freq / 100.0
+
+    return df
+
 # ============================================================================
 # PART 1: LOAD ONE PATIENT (PANDAS BASICS)
 # ============================================================================
@@ -44,6 +100,7 @@ def load_tcr_file(file_path):
     
     # Read TSV (like CSV but tab-separated)
     df = pd.read_csv(file_path, sep='\t')
+    df = standardize_columns(df)
     
     print(f"✓ Loaded {len(df):,} rows")
     print(f"✓ Columns: {len(df.columns)}")
@@ -381,10 +438,11 @@ def main():
     print("  5. Create visualizations")
     print("\nUsing pandas, numpy, and matplotlib - tools you already know!")
     
-    # File path (modify this to your data location)
-    file_path = 'Data/yost/data/su001_BCC_pre1_TCRB.tsv'
-    
     try:
+        # File path (find automatically if possible)
+        file_path = get_default_data_file()
+        print(f"\nUsing data file: {file_path}")
+
         # Step 1: Load data
         df = load_tcr_file(file_path)
         
@@ -417,10 +475,10 @@ def main():
         print("  4. Explore the encoding in more detail")
         print("\n✓ Script completed successfully!")
         
-    except FileNotFoundError:
-        print(f"\n❌ Error: Could not find file: {file_path}")
+    except FileNotFoundError as exc:
+        print(f"\n❌ Error: {exc}")
         print("\nMake sure you've extracted DeepTCR_Cancer-master.zip")
-        print("And update the file_path variable in main()")
+        print("If the data lives somewhere else, set file_path manually and try again.")
     
     except Exception as e:
         print(f"\n❌ Error: {str(e)}")
