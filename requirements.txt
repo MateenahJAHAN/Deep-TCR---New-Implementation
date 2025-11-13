@@ -1,0 +1,22 @@
+# DeepTCR Project Requirements
+# ============================
+# Simple requirements file for learning DeepTCR
+#
+# Install all packages with:
+#   pip install -r requirements.txt
+#
+# Or install individually:
+#   pip install pandas numpy matplotlib seaborn scikit-learn
+
+# Core data science packages (essential)
+pandas>=1.1.4          # For reading and manipulating data (like Excel but for code)
+numpy>=1.18.0          # For working with arrays and numerical operations
+matplotlib>=3.3.3     # For creating plots and visualizations
+seaborn>=0.11.0       # For prettier statistical plots
+
+# Machine learning packages
+scikit-learn>=1.0.1   # For machine learning tools (classification, etc.)
+
+# Optional: DeepTCR package (for advanced usage)
+# DeepTCR>=2.1.6       # Uncomment this line if you want to use the full DeepTCR package
+# Note: DeepTCR installation may take longer and requires TensorFlow

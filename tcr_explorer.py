@@ -19,6 +19,55 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # ============================================================================
+# COLUMN NAME MAPPING - Handle different file formats
+# ============================================================================
+
+def get_column_mapping(df):
+    """
+    Map column names to standard names, handling different file formats
+    
+    Some files use 'aminoAcid', others use 'amino_acid', etc.
+    This function finds the right column names automatically.
+    
+    Returns:
+    --------
+    dict : Mapping from standard names to actual column names
+    """
+    mapping = {}
+    
+    # Map amino acid column
+    if 'aminoAcid' in df.columns:
+        mapping['amino_acid'] = 'aminoAcid'
+    elif 'amino_acid' in df.columns:
+        mapping['amino_acid'] = 'amino_acid'
+    
+    # Map frame type column
+    if 'sequenceStatus' in df.columns:
+        mapping['frame_type'] = 'sequenceStatus'
+    elif 'frame_type' in df.columns:
+        mapping['frame_type'] = 'frame_type'
+    
+    # Map V gene column
+    if 'vGeneName' in df.columns:
+        mapping['v_gene'] = 'vGeneName'
+    elif 'v_gene' in df.columns:
+        mapping['v_gene'] = 'v_gene'
+    
+    # Map J gene column
+    if 'jGeneName' in df.columns:
+        mapping['j_gene'] = 'jGeneName'
+    elif 'j_gene' in df.columns:
+        mapping['j_gene'] = 'j_gene'
+    
+    # Map templates/count column
+    if 'count (templates/reads)' in df.columns:
+        mapping['templates'] = 'count (templates/reads)'
+    elif 'templates' in df.columns:
+        mapping['templates'] = 'templates'
+    
+    return mapping
+
+# ============================================================================
 # PART 1: LOAD ONE PATIENT (PANDAS BASICS)
 # ============================================================================
 
@@ -61,6 +110,9 @@ def explore_data(df):
     - df['col'].value_counts() - count values
     - df.describe() - statistics
     """
+    # Get column mapping for this file format
+    col_map = get_column_mapping(df)
+    
     print("\n--- Data Preview ---")
     print(df.head(3))
     
@@ -68,11 +120,14 @@ def explore_data(df):
     print(df.info())
     
     # Frame type: In = productive, Out = non-productive
+    frame_col = col_map.get('frame_type', 'sequenceStatus')
+    if frame_col not in df.columns:
+        frame_col = 'frame_type'  # fallback
     print("\n--- Frame Types ---")
-    print(df['frame_type'].value_counts())
+    print(df[frame_col].value_counts())
     
     # Focus on productive sequences (standard practice)
-    productive = df[df['frame_type'] == 'In']
+    productive = df[df[frame_col] == 'In']
     print(f"\n✓ Productive sequences: {len(productive):,} ({len(productive)/len(df)*100:.1f}%)")
     
     return productive
@@ -92,6 +147,9 @@ def clean_tcr_data(df):
     - Apply: df['col'].apply(lambda x: ...)
     - Groupby: df.groupby().agg()
     """
+    # Get column mapping for this file format
+    col_map = get_column_mapping(df)
+    
     print(f"\n{'='*70}")
     print("DATA CLEANING PIPELINE")
     print('='*70)
@@ -99,17 +157,23 @@ def clean_tcr_data(df):
     print(f"Starting with: {len(df):,} sequences")
     
     # Step 1: Keep only productive (in-frame) sequences
-    df = df[df['frame_type'] == 'In'].copy()
+    frame_col = col_map.get('frame_type', 'sequenceStatus')
+    if frame_col not in df.columns:
+        frame_col = 'frame_type'  # fallback
+    df = df[df[frame_col] == 'In'].copy()
     print(f"After keeping productive: {len(df):,} sequences")
     
     # Step 2: Remove sequences with invalid amino acids
     # Valid amino acids: A,C,D,E,F,G,H,I,K,L,M,N,P,Q,R,S,T,V,W,Y (20 total)
     valid_aa = set('ACDEFGHIKLMNPQRSTVWY')
-    df = df[df['amino_acid'].apply(lambda x: all(c in valid_aa for c in str(x)))]
+    aa_col = col_map.get('amino_acid', 'aminoAcid')
+    if aa_col not in df.columns:
+        aa_col = 'amino_acid'  # fallback
+    df = df[df[aa_col].apply(lambda x: all(c in valid_aa for c in str(x)))]
     print(f"After removing invalid AA: {len(df):,} sequences")
     
     # Step 3: Length filter (keep typical lengths 10-25)
-    lengths = df['amino_acid'].str.len()
+    lengths = df[aa_col].str.len()
     df = df[(lengths >= 10) & (lengths <= 25)]
     print(f"After length filter: {len(df):,} sequences")
     
@@ -118,9 +182,22 @@ def clean_tcr_data(df):
     print("\n--- Aggregating by sequence ---")
     before_agg = len(df)
     
-    df_agg = df.groupby(['amino_acid', 'v_gene', 'j_gene']).agg({
-        'templates': 'sum'  # Sum read counts
+    v_col = col_map.get('v_gene', 'vGeneName')
+    j_col = col_map.get('j_gene', 'jGeneName')
+    templates_col = col_map.get('templates', 'count (templates/reads)')
+    
+    # Standardize column names for easier use later
+    df_agg = df.groupby([aa_col, v_col, j_col]).agg({
+        templates_col: 'sum'  # Sum read counts
     }).reset_index()
+    
+    # Rename to standard names
+    df_agg = df_agg.rename(columns={
+        aa_col: 'amino_acid',
+        v_col: 'v_gene',
+        j_col: 'j_gene',
+        templates_col: 'templates'
+    })
     
     print(f"Before aggregation: {before_agg:,}")
     print(f"After aggregation: {len(df_agg):,}")
@@ -382,7 +459,8 @@ def main():
     print("\nUsing pandas, numpy, and matplotlib - tools you already know!")
     
     # File path (modify this to your data location)
-    file_path = 'Data/yost/data/su001_BCC_pre1_TCRB.tsv'
+    # Default path assumes data is extracted in DeepTCR_Cancer-master directory
+    file_path = 'DeepTCR_Cancer-master/Data/yost/data/su001_BCC_pre1_TCRB.tsv'
     
     try:
         # Step 1: Load data
@@ -436,7 +514,7 @@ if __name__ == "__main__":
 # BONUS: Helper Functions for Multiple Patients
 # ============================================================================
 
-def load_multiple_patients(data_dir='Data/yost/data', response_file='Data/yost/response.csv'):
+def load_multiple_patients(data_dir='DeepTCR_Cancer-master/Data/yost/data', response_file='DeepTCR_Cancer-master/Data/yost/response.csv'):
     """
     Load and process multiple patient files
     
