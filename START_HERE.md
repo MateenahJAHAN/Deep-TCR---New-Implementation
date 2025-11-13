@@ -22,29 +22,32 @@ README.md
 - Day-by-day plan (2-3 hours per day)
 - How to use this guide
 
-### Step 2: Set Up (Day 1)
-```bash
-# Go to Day 1 folder
-cd Day_01_Setup
+### Step 2: Open Day 1 Notebook
+**IMPORTANT:** We use **Jupyter Notebooks** (.ipynb files), not Python scripts!
 
-# Read what to do
-cat README.md
+**Why notebooks?**
+- ✅ **YOU write the code yourself** (not just import scripts!)
+- ✅ See results immediately
+- ✅ Learn by doing, not by copying
+- ✅ Like Google Colab - interactive and educational
 
-# Run setup script
-python3 setup_project.py
-```
-
-**This will:**
-- Check if Python packages are installed
-- Install missing packages
-- Verify data files exist
-- Test that everything works
+**How to start:**
+1. Open `Day_01_Setup/Day_01_Setup.ipynb` in:
+   - Jupyter Notebook (if installed locally)
+   - Google Colab (upload the notebook)
+   - VS Code with Jupyter extension
+2. Read the markdown cells (explanations)
+3. Fill in the TODO sections (**write code yourself!**)
+4. Run each cell to see results
 
 ### Step 3: Follow Day-by-Day Plan
-- Each day has its own folder (`Day_01_Setup/`, `Day_02_Explore_Data/`, etc.)
-- Each folder has a `README.md` explaining what to do
-- Each folder has Python scripts with detailed comments
+- Each day has a **Jupyter Notebook** (.ipynb file)
+- Each notebook has:
+  - **Markdown cells** - explanations and instructions
+  - **Code cells with TODOs** - where YOU write the code
+  - **Questions to think about** - build your understanding
 - Work through them one day at a time!
+- **You write the code, not just import it!**
 
 ---
 
