@@ -324,25 +324,31 @@ python3 load_one_file.py
 
 ### For Each Day:
 
-1. **Read the README.md in that day's folder**
-   - Explains what you'll learn
-   - Lists what to do
-   - Has questions to think about
+1. **Open the Jupyter Notebook (.ipynb file)**
+   - Use Jupyter Notebook, JupyterLab, or Google Colab
+   - Each notebook has markdown cells (explanations) and code cells
 
-2. **Open the Python scripts**
-   - Read the comments (they explain everything!)
-   - Run the scripts
-   - Modify them to experiment
+2. **Read the markdown cells**
+   - They explain what you'll learn
+   - They have questions to think about
+   - They give you hints
 
-3. **Answer the questions**
-   - Think about them before coding
-   - Write down your answers
-   - Discuss with others if possible
+3. **Fill in the TODO sections**
+   - **YOU write the code yourself!**
+   - Look for `# TODO:` comments
+   - Write your code in those cells
+   - Run the cell to see if it works
 
-4. **Don't rush!**
+4. **Learn by doing**
+   - Don't just copy code - understand it!
+   - Experiment and modify
+   - Make mistakes and learn from them
+
+5. **Don't rush!**
    - Take your time
-   - If something doesn't make sense, re-read
-   - Experiment and play around
+   - If stuck, re-read the explanations
+   - Google error messages
+   - Ask questions!
 
 ---
 
