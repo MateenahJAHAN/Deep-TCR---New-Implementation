@@ -11,6 +11,40 @@
 
 ---
 
+## 🚀 Quick Start (3 Steps)
+
+### Step 1: Read This Guide
+You're reading it now! This explains what the project is about.
+
+### Step 2: Start with Day 0
+**IMPORTANT:** We use **Jupyter Notebooks** (.ipynb files), not Python scripts!
+
+**Why notebooks?**
+- ✅ **YOU write the code yourself** (not just import scripts!)
+- ✅ See results immediately
+- ✅ Learn by doing, not by copying
+- ✅ Like Google Colab - interactive and educational
+
+**How to start:**
+1. Open `Day_00_Getting_Started/Day_00_Getting_Started.ipynb` in:
+   - **Google Colab** (recommended - no installation!) - https://colab.research.google.com/
+   - Jupyter Notebook (if installed locally)
+   - VS Code with Jupyter extension
+2. Read the markdown cells (explanations)
+3. Fill in the TODO sections (**write code yourself!**)
+4. Run each cell to see results
+
+### Step 3: Follow Day-by-Day Plan
+- Work through Days 0-10 in order
+- Each day has a **Jupyter Notebook** (.ipynb file)
+- Each notebook has:
+  - **Markdown cells** - explanations and instructions
+  - **Code cells with TODOs** - where YOU write the code
+  - **Questions to think about** - build your understanding
+- **You write the code, not just import it!**
+
+---
+
 ## 📖 What Is This Project About?
 
 ### The Big Picture (In Simple Terms)
@@ -36,287 +70,154 @@
 
 ---
 
-## 🎓 What You Already Know (From College)
-
-### Pandas (DataFrames)
-```python
-# You know this:
-df = pd.read_csv('data.csv')  # Read a file
-df.head()                     # See first rows
-df['column'].value_counts()   # Count values
-```
-
-**In this project:** We'll use pandas to read TCR data files (they're like CSV files but with tabs instead of commas)
-
-### NumPy (Arrays)
-```python
-# You know this:
-arr = np.array([1, 2, 3])     # Create array
-arr.shape                     # Get dimensions
-arr.mean()                    # Calculate mean
-```
-
-**In this project:** We'll convert TCR sequences (strings) into numpy arrays so computers can work with them
-
-### Sklearn (Machine Learning)
-```python
-# You know this:
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y)
-model.fit(X_train, y_train)
-```
-
-**In this project:** We'll use similar concepts, but with a twist - one patient = many sequences = one label (this is called "Multiple Instance Learning")
-
----
-
-## 📁 Project Structure (What's Where?)
+## 📁 Project Structure
 
 ```
 DeepTCR_Learning/
 │
-├── README.md                          ⭐ START HERE - This file!
+├── README.md                    ⭐ You are here!
+├── START_HERE.md               📍 Quick start guide
+├── LEARNING_ROADMAP.md          📚 Original learning roadmap
 │
-├── Day_01_Setup/                     📅 Day 1: Set up everything
-│   ├── README.md                     (What to do today)
-│   ├── setup_project.py              (Run this first!)
-│   └── test_setup.py                 (Check if everything works)
+├── Day_00_Getting_Started/     📅 Day 0: Learn Jupyter/Colab basics
+├── Day_01_Setup/               📅 Day 1: Install packages
+├── Day_02_Explore_Data/        📅 Day 2: Explore data
+├── Day_03_Clean_Data/          📅 Day 3: Clean data
+├── Day_04_Understand_Data/     📅 Day 4: Statistics & plots
+├── Day_05_Encode_Sequences/    📅 Day 5: Encode sequences
+├── Day_06_Multiple_Patients/    📅 Day 6: Multiple patients
+├── Day_07_Simple_ML/           📅 Day 7: Simple ML baselines
+├── Day_08_Understand_MIL/      📅 Day 8: Multiple Instance Learning
+├── Day_09_DeepTCR_Setup/       📅 Day 9: Install DeepTCR
+├── Day_10_Run_DeepTCR/         📅 Day 10: Train model
 │
-├── Day_02_Explore_Data/              📅 Day 2: Look at the data
-│   ├── README.md                     (What to do today)
-│   ├── load_one_file.py              (Load one patient's data)
-│   └── explore_dataframe.py          (See what's in the data)
-│
-├── Day_03_Clean_Data/                📅 Day 3: Clean the data
-│   ├── README.md                     (What to do today)
-│   ├── filter_sequences.py           (Remove bad data)
-│   └── aggregate_data.py             (Combine duplicates)
-│
-├── Day_04_Understand_Data/           📅 Day 4: Understand what you have
-│   ├── README.md                     (What to do today)
-│   ├── calculate_statistics.py       (Basic stats)
-│   └── visualize_data.py             (Make plots)
-│
-├── Day_05_Encode_Sequences/           📅 Day 5: Convert strings to numbers
-│   ├── README.md                     (What to do today)
-│   ├── encode_one_sequence.py       (One sequence → array)
-│   └── encode_all_sequences.py       (All sequences → arrays)
-│
-├── Day_06_Multiple_Patients/          📅 Day 6: Work with many patients
-│   ├── README.md                     (What to do today)
-│   ├── load_multiple_patients.py     (Load all patients)
-│   └── compare_patients.py           (Compare responders vs non-responders)
-│
-├── Day_07_Simple_ML/                  📅 Day 7: Try simple machine learning
-│   ├── README.md                     (What to do today)
-│   ├── mean_pooling_baseline.py      (Simple approach)
-│   └── sklearn_baseline.py           (Use sklearn)
-│
-├── Day_08_Understand_MIL/             📅 Day 8: Learn Multiple Instance Learning
-│   ├── README.md                     (What to do today)
-│   └── mil_explained.py              (What is MIL?)
-│
-├── Day_09_DeepTCR_Setup/              📅 Day 9: Set up DeepTCR package
-│   ├── README.md                     (What to do today)
-│   └── install_deeptcr.py            (Install the package)
-│
-├── Day_10_Run_DeepTCR/                📅 Day 10: Run the actual model
-│   ├── README.md                     (What to do today)
-│   └── train_model.py                (Train DeepTCR model)
-│
-├── data/                              📊 All the data files
+├── data/                       📊 All data files
 │   └── DeepTCR_Cancer-master/
-│       └── Data/
-│           └── yost/
-│               ├── data/              (37 patient files)
-│               └── response.csv       (Who responded?)
+│       └── Data/yost/
+│           ├── data/          (37 patient files)
+│           └── response.csv   (Patient labels)
 │
-├── guides/                             📚 Learning guides (read as needed)
-│   ├── pandas_to_deeptcr_guide.md    (Connect pandas to DeepTCR)
-│   ├── dataset_exploration_guide.md  (Understand the data)
-│   ├── deeptcr_architecture.md       (How the model works)
-│   └── data_shapes_walkthrough.md    (Array dimensions explained)
-│
-└── requirements.txt                    📦 Python packages needed
+├── scripts/                    🔧 Helper scripts (optional)
+└── docs/                       📚 Documentation & guides
 ```
-
----
-
-## 🚀 Quick Start (3 Steps)
-
-### Step 1: Set Up (Day 1)
-```bash
-# Go to Day 1 folder
-cd Day_01_Setup
-
-# Read what to do
-cat README.md
-
-# Run setup script
-python3 setup_project.py
-```
-
-### Step 2: Explore Data (Day 2)
-```bash
-# Go to Day 2 folder
-cd Day_02_Explore_Data
-
-# Read what to do
-cat README.md
-
-# Run the script
-python3 load_one_file.py
-```
-
-### Step 3: Follow Day-by-Day Plan
-- Each day has its own folder
-- Each folder has a README.md explaining what to do
-- Each folder has Python scripts with detailed comments
-- Work through them one day at a time!
 
 ---
 
 ## 📅 Day-by-Day Plan (2-3 Hours Per Day)
 
+### Day 0: Getting Started 🚀
+**Goal:** Learn how to use Jupyter Notebooks or Google Colab
+- Install Python (or use Colab)
+- Learn notebook basics
+- Run your first code cells
+- **Time:** 1-2 hours
+
 ### Day 1: Setup ⚙️
-**Goal:** Get everything installed and working
-- Install Python packages
-- Download data (already done!)
-- Test that everything works
+**Goal:** Install Python packages
+- Check Python version
+- Install pandas, numpy, matplotlib, etc.
+- Verify everything works
 - **Time:** 2 hours
 
-**Questions to Think About:**
-- What Python packages do I need? Why?
-- What is the data file format? (TSV vs CSV)
-- How do I check if something is installed correctly?
-
----
-
 ### Day 2: Explore Data 🔍
-**Goal:** Look at one patient's data file
-- Load a TSV file using pandas
-- See what columns exist
-- Understand what each column means
+**Goal:** Look at TCR data files
+- Load TSV files using pandas
+- Understand columns
+- Filter to productive sequences
 - **Time:** 2-3 hours
-
-**Questions to Think About:**
-- What does `pd.read_csv()` do? (Hint: TSV files use `sep='\t'`)
-- What is a TCR sequence? (It's a string of amino acids)
-- What does "productive" mean? (In-frame sequences that work)
-- How many sequences does one patient have?
-
----
 
 ### Day 3: Clean Data 🧹
-**Goal:** Remove bad data and prepare for analysis
-- Filter to only productive sequences
-- Remove sequences with invalid characters
-- Aggregate duplicate sequences
+**Goal:** Prepare data for analysis
+- Filter bad sequences
+- Remove invalid amino acids
+- Aggregate duplicates
 - **Time:** 2-3 hours
-
-**Questions to Think About:**
-- Why do we filter to "productive" sequences only?
-- What does `df.groupby().sum()` do? (Hint: combines duplicates)
-- Why might the same sequence appear multiple times?
-
----
 
 ### Day 4: Understand Data 📊
 **Goal:** Calculate statistics and visualize
-- Calculate basic statistics (mean, median, etc.)
-- Make plots (histograms, bar charts)
-- Understand the distribution of sequences
+- Load multiple patients
+- Calculate average repertoire size
+- Find most common V genes
+- Plot sequence lengths
+- Compare responders vs non-responders
 - **Time:** 2-3 hours
-
-**Questions to Think About:**
-- What is "diversity" in TCR data? (More unique sequences = more diverse)
-- What is "clonality"? (Opposite of diversity - few sequences dominate)
-- How do responders differ from non-responders?
-
----
 
 ### Day 5: Encode Sequences 🔢
-**Goal:** Convert strings to numbers (for machine learning)
-- Understand one-hot encoding (like `pd.get_dummies()`)
-- Encode one amino acid sequence
-- Encode all sequences for one patient
+**Goal:** Convert strings to numbers
+- Implement one-hot encoding
+- Encode amino acid sequences
+- Encode V/D/J genes
+- Understand shape transformations
 - **Time:** 3 hours
-
-**Questions to Think About:**
-- Why do we need to convert strings to numbers? (Computers work with numbers!)
-- What is one-hot encoding? (One 1, rest 0s - like `pd.get_dummies()`)
-- What shape will the encoded array be? (sequences × positions × amino_acids)
-
----
 
 ### Day 6: Multiple Patients 👥
-**Goal:** Work with all patients at once
-- Load multiple patient files
-- Compare responders vs non-responders
-- Calculate statistics across all patients
+**Goal:** Work with all patients
+- Load all patient files
+- Create patient batches
+- Handle different repertoire sizes
 - **Time:** 2-3 hours
-
-**Questions to Think About:**
-- How do I loop through multiple files? (Use `glob` or `os.listdir()`)
-- How do I merge patient data with response labels? (Use `pd.merge()`)
-- What patterns do I see between responders and non-responders?
-
----
 
 ### Day 7: Simple ML 🤖
-**Goal:** Try simple machine learning approaches
-- Mean pooling (average all sequences)
-- Max pooling (take strongest sequence)
-- Use sklearn to train a simple classifier
+**Goal:** Try simple machine learning
+- Implement mean pooling
+- Implement max pooling
+- Use sklearn baseline
+- Understand why simple pooling fails
 - **Time:** 3 hours
-
-**Questions to Think About:**
-- Why can't I just use `model.fit(X, y)` directly? (One patient = many sequences = one label!)
-- What is "pooling"? (Combining many things into one)
-- Why might simple averaging not work well?
-
----
 
 ### Day 8: Understand MIL 🎓
-**Goal:** Learn about Multiple Instance Learning
-- Understand the "bag of instances" concept
-- Learn why normal ML doesn't work here
-- Understand what attention mechanism does
+**Goal:** Learn Multiple Instance Learning
+- Compare traditional ML vs MIL
+- Understand bag of sequences
+- Understand need for attention
 - **Time:** 2-3 hours
 
-**Questions to Think About:**
-- What is Multiple Instance Learning? (Many instances → one label)
-- Why is this different from normal ML? (Normal: one instance → one label)
-- What does "attention" mean? (Learning which sequences matter)
-
----
-
 ### Day 9: DeepTCR Setup 📦
-**Goal:** Install and set up the DeepTCR package
-- Install DeepTCR (may take time!)
-- Understand what DeepTCR does
-- Load data using DeepTCR format
+**Goal:** Install DeepTCR package
+- Install DeepTCR
+- Understand DeepTCR API
+- Prepare data format
 - **Time:** 2 hours
 
-**Questions to Think About:**
-- What does DeepTCR package do? (It's the actual model from the paper!)
-- How is DeepTCR different from sklearn? (It handles MIL automatically)
-- What format does DeepTCR expect?
+### Day 10: Run DeepTCR 🚀
+**Goal:** Train the actual model
+- Train DeepTCR model
+- Make predictions
+- Evaluate AUC (target ~0.82)
+- Extract attention weights
+- **Time:** 3 hours
 
 ---
 
-### Day 10: Run DeepTCR 🚀
-**Goal:** Train the actual model from the paper
-- Load data in DeepTCR format
-- Train the model
-- Make predictions
-- Evaluate results
-- **Time:** 3 hours
+## 🎓 What You Already Know (From College)
 
-**Questions to Think About:**
-- How do I train the model? (Use `model.Train_Supervised_Repertoire()`)
-- How do I make predictions? (Use `model.Predict_Repertoire()`)
-- How do I evaluate if it worked? (Calculate AUC, accuracy, etc.)
+### Pandas (DataFrames)
+```python
+df = pd.read_csv('file.csv')  # Read a file
+df.head()                     # See first rows
+df[df['col'] == 'value']      # Filter
+df.groupby('col').sum()       # Group and aggregate
+```
+
+**In this project:** We use pandas to read TCR data files!
+
+### NumPy (Arrays)
+```python
+arr = np.array([1, 2, 3])     # Create array
+arr.shape                     # Get dimensions
+arr.mean()                    # Calculate mean
+```
+
+**In this project:** We convert TCR sequences (strings) into numpy arrays!
+
+### Sklearn (Machine Learning)
+```python
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y)
+model.fit(X_train, y_train)
+```
+
+**In this project:** We use similar concepts, but with a twist (Multiple Instance Learning)!
 
 ---
 
@@ -349,6 +250,21 @@ python3 load_one_file.py
    - If stuck, re-read the explanations
    - Google error messages
    - Ask questions!
+
+---
+
+## ✅ Checklist: Are You Ready?
+
+Before starting, make sure you:
+- [ ] Have Python 3.7+ installed OR can use Google Colab
+- [ ] Know basic Python (variables, functions, loops)
+- [ ] Know pandas basics (`pd.read_csv()`, `df.head()`, etc.)
+- [ ] Know numpy basics (`np.array()`, `arr.shape`, etc.)
+- [ ] Know sklearn basics (`train_test_split()`, simple models)
+- [ ] Have 2-3 hours per day for 10 days
+- [ ] Are ready to learn and experiment!
+
+**If you don't know Jupyter Notebooks:** Start with Day 0! It teaches you everything you need.
 
 ---
 
@@ -392,72 +308,22 @@ y = 1                    # ONE label (responder or not)
 - But you don't know which individual pieces matter
 - MIL learns which pieces are important!
 
-### What Does This Paper Do?
-
-1. **Input:** Patient's TCR sequences (50,000 sequences)
-2. **Process:** 
-   - Convert sequences to numbers (encoding)
-   - Use neural network to find important sequences (attention)
-   - Combine information from all sequences (aggregation)
-3. **Output:** Prediction (will patient respond? Yes/No + probability)
-
-**In simple terms:**
-- Look at all T cell barcodes
-- Find patterns that predict response
-- Use those patterns to predict for new patients
-
 ---
 
-## 🛠️ What Tools Will You Use?
+## 🆘 Common Questions
 
-### Python (You know this!)
-- Basic Python syntax
-- Functions, loops, conditionals
-- File I/O
-
-### Pandas (You know this!)
-```python
-pd.read_csv()        # Read files
-df.head()            # Preview data
-df.groupby()         # Group and aggregate
-df.merge()           # Combine DataFrames
-```
-
-### NumPy (You know this!)
-```python
-np.array()           # Create arrays
-arr.shape           # Get dimensions
-arr.mean()          # Calculate statistics
-```
-
-### Matplotlib (You might know this!)
-```python
-plt.plot()          # Make line plots
-plt.hist()          # Make histograms
-plt.bar()           # Make bar charts
-```
-
-### Sklearn (You know this!)
-```python
-train_test_split()  # Split data
-RandomForestClassifier()  # Simple ML model
-```
-
-### DeepTCR (New!)
-- Package from the paper
-- Handles Multiple Instance Learning automatically
-- You'll learn this in Days 9-10
-
----
-
-## ❓ Common Questions
+### Q: I've never used Jupyter Notebooks before!
+**A:** 
+- Start with Day 0! It teaches you everything
+- Or use Google Colab (easier, no installation)
+- Day 0 covers: installing, opening notebooks, running cells
 
 ### Q: I'm stuck! What do I do?
 **A:** 
 1. Read the error message carefully - it usually tells you what's wrong
 2. Check the comments in the code - they explain what each line does
-3. Re-read the day's README.md
-4. Google the error message (someone else probably had the same problem!)
+3. Re-read the day's explanations
+4. Google the error message
 5. Take a break and come back fresh
 
 ### Q: How long will this take?
@@ -473,68 +339,30 @@ RandomForestClassifier()  # Simple ML model
 - DeepTCR handles the deep learning part for you
 - You'll understand what it does, but don't need to implement it yourself
 
-### Q: What if I don't understand something?
-**A:** 
-- That's normal! Research papers are hard
-- Re-read the explanation
-- Try the code yourself
-- Experiment and see what happens
-- Each day builds on the previous, so make sure you understand Day 1 before Day 2
-
-### Q: Can I skip days?
-**A:** 
-- **Not recommended!** Each day builds on the previous
-- If you're really stuck on one day, you can review previous days
-- But try to complete them in order
-
----
-
-## 📖 Additional Resources
-
-### Guides (in `guides/` folder):
-- **pandas_to_deeptcr_guide.md**: Connects pandas concepts to DeepTCR
-- **dataset_exploration_guide.md**: Detailed data structure explanation
-- **deeptcr_architecture.md**: How the model works (more advanced)
-- **data_shapes_walkthrough.md**: Understanding array dimensions
-
-### When to Read These:
-- Read guides as you need them
-- Don't read everything at once!
-- Each day's README will tell you if you need a specific guide
-
----
-
-## ✅ Checklist: Are You Ready?
-
-Before starting, make sure you:
-- [ ] Have Python 3.7+ installed (`python3 --version`)
-- [ ] Know basic Python (variables, functions, loops)
-- [ ] Know pandas basics (`pd.read_csv()`, `df.head()`, etc.)
-- [ ] Know numpy basics (`np.array()`, `arr.shape`, etc.)
-- [ ] Know sklearn basics (`train_test_split()`, simple models)
-- [ ] Have 2-3 hours per day for 10 days
-- [ ] Are ready to learn and experiment!
-
 ---
 
 ## 🎉 You're Ready to Start!
 
-**Next Step:** Go to `Day_01_Setup/` folder and read `README.md`
+### Next Steps:
 
-**Remember:**
-- Take your time
-- Read the comments
-- Experiment
-- Ask questions (even if just to yourself!)
-- Have fun learning!
+1. **Read START_HERE.md** (quick start guide)
+2. **Go to Day_00_Getting_Started/** folder
+3. **Open Day_00_Getting_Started.ipynb** in Jupyter/Colab
+4. **Follow the day-by-day plan!**
 
-**Good luck! You've got this! 🚀**
+### Remember:
+- ✅ Take your time
+- ✅ Read the comments
+- ✅ Write code yourself (don't just copy!)
+- ✅ Experiment
+- ✅ Ask questions (even if just to yourself!)
+- ✅ Have fun learning!
 
 ---
 
 ## 📝 Notes Section
 
-Use this space to write down:
+Use this space (or a notebook) to write down:
 - Things you learned each day
 - Questions you have
 - Ideas to explore
@@ -542,5 +370,9 @@ Use this space to write down:
 
 ---
 
+**Good luck! You've got this! 🚀**
+
+---
+
 *Last updated: [Date]*
-*For questions or issues, check the day-specific README files or the guides folder.*
+*For questions, check the day-specific notebooks or the docs folder.*
