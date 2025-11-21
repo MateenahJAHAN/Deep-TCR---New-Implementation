@@ -1,0 +1,923 @@
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+1 of 11
+IMMUNOLOGY
+Deep learning reveals predictive sequence concepts 
+within immune repertoires to immunotherapy
+John-William Sidhom1,2,3,4*, Giacomo Oliveira5,6, Petra Ross-MacDonald7, Megan Wind-Rotolo7, 
+Catherine J. Wu5,6,8,9, Drew M. Pardoll1,2, Alexander S. Baras1,2,10
+T cell receptor (TCR) sequencing has been used to characterize the immune response to cancer. However, most 
+analyses have been restricted to quantitative measures such as clonality that do not leverage the complementarity- 
+determining region 3 (CDR3) sequence. We use DeepTCR, a framework of deep learning algorithms, to reveal se-
+quence concepts that are predictive of response to immunotherapy. We demonstrate that DeepTCR can predict 
+response and use the model to infer the antigenic specificities of the predictive signature and their unique dynamics 
+during therapy. The predictive signature of nonresponse is associated with high frequencies of TCRs predicted to 
+recognize tumor-specific antigens, and these tumor-specific TCRs undergo a higher degree of dynamic changes 
+on therapy in nonresponders versus responders. These results are consistent with a biological model where the 
+hallmark of nonresponders is an accumulation of tumor-specific T cells that undergo turnover on therapy, possibly 
+because of the dysfunctional state of these T cells in nonresponders.
+INTRODUCTION
+The advent of checkpoint inhibition [–programmed death 1 (-PD1) 
+and –cytotoxic T lymphocyte associated protein 4 (-CTLA4)] in 
+cancer has changed the landscape of how oncologists understand 
+and treat advanced and aggressive disease (1–3). The initial trials of 
+checkpoint inhibition or blockade demonstrated the possibility 
+for obtaining durable clinical benefit in advanced metastatic cancer 
+(4–6); however, while there has been tremendous promise of im-
+munotherapy, most patients still do not respond to this mode of 
+treatment (6). Thus, great attention has been made to the develop-
+ment of predictive biomarkers to select for which patients may benefit 
+the most from immunotherapy and to further our understanding of 
+successful use of checkpoint blockade in cancer (7–20).
+One promising area of interest has been examining the T cell 
+response through broad analysis of the T cell repertoire via T cell 
+receptor sequencing (TCR-seq), where the TCR sequence is obtained 
+through next-generation sequencing, allowing for a characterization 
+of the antigenic determinants of response (12, 13, 21–23). However, 
+the vast majority of the work in this area has been limited to charac-
+terizing the diversity of the TCR repertoire (either at the clonotype 
+or structural level) (24–32). Previous work has demonstrated that 
+certain sequence concepts can predict tumor types (33) but has yet 
+to be applied in an effort to predict response to immunotherapy, 
+and thus, we wanted to query whether there were sequence concepts 
+(i.e., motifs) that were predictive of response to immunotherapy.
+We used the repertoire classifier from DeepTCR, a previously 
+described set of deep learning algorithms, to search for sequence 
+concepts that were predictive of response to immunotherapy (22, 23). 
+We applied DeepTCR to a clinical trial dataset (CheckMate-038) 
+where patients with inoperable melanoma received either -PD1 or 
+-PD1 +  -CTLA4, were sequenced before and after initiation of 
+therapy and where the ground truth label corresponds to radio-
+graphic response via RECIST v1.1 criterion. This analysis not only 
+represents the value of DeepTCR as a pre-treatment biomarker pre-
+dictive of response in a clinical immunotherapy setting, reanalyzing 
+recently published TCR-seq data from Anagnostou et al. (21), but 
+we further use this predictive modeling to reveal biological insights 
+into the antigenic determinants of response and their dynamics 
+under the influence of immunotherapy.
+RESULTS
+Extending DeepTCR’s repertoire classifier with human 
+leukocyte antigen
+We first expand our previously described multiple-instance learn-
+ing (MIL) repertoire classifier by allowing for incorporation of the 
+human leukocyte antigen (HLA) into the featurization of the TCR 
+to provide a representation of a joint TCR-HLA antigenic latent 
+space (Fig. 1). This is particularly important when analyzing human- 
+derived data as individuals often have different HLA backgrounds 
+and their tumors have unique mutation-associated neoantigens and 
+tumor-associated antigens; thus, TCRs that are structurally homolo-
+gous would likely not be recognizing the same tumor antigens if 
+being compared from patients with different HLA backgrounds. By 
+incorporating HLA into the featurization of the TCR, we provide 
+contextualization of the TCR by the HLA background it was observed 
+within and thus allow direct comparisons between individuals/
+patients with differing HLA backgrounds.
+DeepTCR’s repertoire classifier is predictive of response
+We first applied DeepTCR to the pre-treatment tumor specimens 
+from the cohort of patients enrolled in the CheckMate-038 clinical 
+trial (fig. S1). Pre-treatment tumor biopsies were collected and TCR-
+seq was performed from 43 patients enrolled in the CheckMate-038 
+(parts 2 to 4) clinical trial where they were either treated with -PD1 
+monotherapy (9 patients) or -PD1 + -CTLA combination therapy 
+1Bloomberg Kimmel Institute for Cancer Immunotherapy, Johns Hopkins University 
+School of Medicine, Baltimore, MD, USA. 2The Sidney Kimmel Comprehensive Cancer 
+Center, Johns Hopkins University School of Medicine, Baltimore, MD, USA. 3Depart-
+ment of Biomedical Engineering, Johns Hopkins University School of Medicine, 
+Baltimore, MD, USA. 4Icahn School of Medicine at Mount Sinai, New York, NY, USA. 
+5Department of Medical Oncology, Dana-Farber Cancer Institute, Boston, MA, USA. 
+6Harvard Medical School, Boston, MA, USA. 7Bristol Myers Squibb, Princeton, NJ, 
+USA. 8Broad Institute of MIT and Harvard, Cambridge, MA, USA. 9Department of 
+Medicine, Brigham and Women’s Hospital, Boston, MA, USA. 10Department of 
+Pathology, Johns Hopkins University School of Medicine, Baltimore, MD, USA.
+*Corresponding author. Email: johnwilliamsidhom@gmail.com
+Copyright © 2022 
+The Authors, some 
+rights reserved; 
+exclusive licensee 
+American Association 
+for the Advancement 
+of Science. No claim to 
+original U.S. Government 
+Works. Distributed 
+under a Creative 
+Commons Attribution 
+NonCommercial 
+License 4.0 (CC BY-NC).
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+2 of 11
+(34 patients) and followed for radiographic response to therapy via 
+RECIST v1.1. Complete responders and partial responders (CRPR) 
+were denoted as responders to therapy while stable disease and pro-
+gressive disease (SDPD) were denoted as nonresponders to therapy. 
+We observed that when applying DeepTCR to predict response to 
+immunotherapy, the joint representation of TCR with HLA out-
+performed models of DeepTCR that used TCR sequence or HLA 
+genotype information alone [area under curves (AUCs); TCR = 0.77, 
+HLA = 0.75, TCR + HLA = 0.86, random permutation testing = 0.515; 
+Fig. 2A, stratified by treatment cohort in fig. S2]. The resulting 
+DeepTCR’s TCR + HLA model predictions of likelihood to respond 
+to treatment also significantly stratified progression-free survival 
+(PFS) in this cohort of patients (Fig. 2B). The TCR + HLA model 
+exhibited less variability during cross-validation assessments as 
+compared with either the TCR or HLA model alone (fig. S3), and it 
+appears that the addition of HLA genotype conditions the model to 
+learn different information from the TCR sequence data (fig. S4). 
+We also found that in this cohort, the DeepTCR TCR + HLA model 
+performed comparably to conventional biomarkers that have been 
+previously described to stratify response in immunotherapy-treated 
+patients [AUCs; programmed death ligand 1 (PD-L1; immuno-
+histochemistry tumor proportion score) = 0.693, total mutational 
+burden (TMB; exome based) = 0.772, TCR clonality = 0.642, and total 
+T cell count = 0.825; fig. S5]. In addition, while similar performance 
+(based on AUC) is observed with total T cell counts (a surrogate of 
+the degree of T cell tumor infiltration) and DeepTCR, these predic-
+tors are independent of multivariate logistic regression analyses and 
+as such plausibly represent complementary information. To further 
+validate our findings, we collected two independent validation 
+cohorts of patients (denoted as yost and sade) with skin cancer who 
+were treated with checkpoint blockade and underwent either bulk 
+TCR-seq or single-cell TCR-seq before initiation of treatment 
+(34, 35). When using the 100 models fit in Monte Carlo (MC) cross- 
+validation on the CheckMate-038 dataset in ensemble on these two 
+cohorts of patients, we found the predictive signature of response in 
+varying degrees in both these cohorts before initiation of treatment 
+[AUCs: yost = 0.82 (n  = 11), sade = 0.61 (n  = 19), and yost + 
+sade = 0.71 (n = 30)], providing further validation of this predictive 
+signature of response to checkpoint blockade (Fig. 2C).
+Unsupervised representation reveals nature of predictive 
+antigenic response
+To characterize the distribution of the TCR repertoires in patients 
+who either responded or did not respond to treatment, we trained a 
+variational autoencoder (VAE), another type of model part of the 
+DeepTCR framework (22), on all data to obtain an unsupervised 
+featurization to visualize [via uniform manifold approximation and 
+projection (UMAP)] the distribution of nonresponders and responders 
+Fig. 1. HLA-extended, MIL-supervised TCR repertoire model. We expand on previous work by modifying the TCR featurization block to incorporate the HLA background 
+within which a given collection of TCRs were observed. The HLA background of a sample/individual is provided to the neural network in a multihot representation that 
+is re-represented in a learned continuous embedding layer and concatenated to the continuous learned representation of the TCR. As previously described, we 
+implement a multihead attention mechanism to make sequence assignments to concepts within the sample. The number of concepts in the model is a hyperparameter, 
+which can be varied by the user depending on the heterogeneity expected in the repertoires. Notably, this assignment of a sequence to a concept is done through an 
+adaptive activation function that outputs a value between 0 and 1, allowing the network to put attention on the sequences that are relevant to the learning task. When 
+taking the average of these assignments over all the cells in a repertoire, this results in a value within the neural network that directly corresponds to the proportion of 
+the repertoire that is described by that learned concept. These proportions of concepts in the repertoire are then sent into a final traditional classification layer. Adapted 
+from Sidhom et al. (22), T. Phelps, Department of Art as Applied to Medicine, The Johns Hopkins University School of Medicine. APC, antigen-presenting cell; MHC, major 
+histocompatibility complex.
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+3 of 11
+(Fig. 3A; per sample distributions shown in fig. S6). While no 
+difference in the overall distributions can be appreciated when looking 
+at all the data, we found that when filtering the TCR sequences to 
+the top and bottom 10% predictive sequences (Fig. 3B), we were able 
+to visualize differences in the TCR repertoires between responders 
+and nonresponders (Fig. 3C), illustrating the functionality of the MIL 
+algorithm to “denoise” TCR repertoire. We noted that not only are the 
+distributions within responders and nonresponders multimodal but 
+also these multiple modes are shared between patients (Fig. 3D).
+Predictive signature persists while on therapy
+We next wanted to query whether this predictive signature of re-
+sponse (pre-tx) persisted in the TCR repertoires taken post-treatment 
+(post-tx). To do this, we applied the models (TCR, HLA, and 
+TCR + HLA) trained on the pre-treatment data to 35 paired post-  
+treatment samples and examined the receiver operating characteristic 
+(ROC) curves and AUCs between pre-treatment and post-treatment 
+(Fig. 4A). When doing this, the results demonstrated comparable 
+performance between the pre-treatment and post-treatment samples, 
+suggesting that the predictive signature was still present even weeks 
+after initiating immunotherapy. Furthermore, we noted a high cor-
+relation between the pre-treatment and post-treatment prediction 
+values (Fig. 4B), suggesting maintenance of pre-treatment response- 
+relevant repertoires during treatment. When comparing the 35 
+paired pre- and post-treatment repertoires, examining the top 10% 
+predictive sequences for each class (i.e., CRPR versus SDPD) either 
+at the sample level (Fig.  4,  C  and  E) or entire cohort level 
+(Fig. 4, D and F), we demonstrated a conserved predictive antigenic 
+response while on therapy. Together, these findings suggest that the 
+antigenic response is not only different between responders and 
+nonresponders to checkpoint blockade, but each cohort of patients 
+contains a set of T cell responses that likely recognize a broad class 
+of structurally related antigens and these predictive concepts persist 
+while on treatment.
+Predictive signature of nonresponse is associated 
+with tumor-specific TCRs
+To further characterize the antigenic specificity of the antigenic 
+response, we first created residue sensitivity logos as described in 
+the original DeepTCR publication (22) of the top 50 most predictive 
+TCRs of responders (CRPR) and nonresponders (SDPD) (Fig. 5A). 
+We noted that the most predictive residues were localized to the 
+central portion of the sequence, suggesting that the predictive signature 
+was indeed related to the antigen specificity of the TCR. We then 
+used a previously published dataset in melanoma by Oliveira et al. 
+(36) where the authors had paired TCR sequence data with known 
+specificities (i.e., viral versus neoantigen versus tumor-associated 
+antigens), along with the known HLA background of the individuals 
+from which the sequences were obtained. We took these TCRs and 
+ran them through the previously trained DeepTCR repertoire classifier 
+to assign per-sequence likelihoods of response versus nonresponse. 
+We noted that when looking at the distribution of likelihoods across 
+the various types of antigens, the virus-specific TCRs [Epstein-Barr 
+virus (EBV), Influenza (Flu), and yellow fever (YF)] had a higher 
+likelihood of response than the tumor-specific TCRs [NeoAg and 
+melanoma antigen recognized by T cells 1 (MART-1)] (Fig. 5, B and C). 
+To further validate these findings, we pulled TCRs from the McPas-TCR 
+database (37) and crossed exact sequences matches with the TCRs 
+found within the CheckMate-038 cohort and then looked at the 
+corresponding likelihood of response of these cross-matched TCRs. 
+Once again, we noted a similar finding to the dataset of Oliveira et al. 
+(36) in that the virus-specific TCRs (EBV, cytomegalovirus, flu, and 
+YF) had a higher likelihood of response than the tumor-specific 
+TCRs (MART-1) (Fig. 5D). When visualizing these virus-specific 
+versus MART-1–specific TCRs in the unsupervised TCR sequence 
+space, we also saw that the virus-specific TCRs were more enriched 
+in the responder-specific areas and the MART-1–specific TCRs 
+were more enriched in the nonresponder-specific areas of the 
+UMAP (Fig. 5E).
+Fig. 2. Repertoire classification in human pre-treatment tumor-infiltrating lymphocytes. (A) Receiver operating characteristic (ROC) curves were created for predicting 
+response (complete response and partial response) to immunotherapy given TCR, HLA, or TCR + HLA information to the supervised repertoire classifier [100 Monte Carlo 
+(MC) simulations with a train size of 37 and a test size of 6]. Bootstrap analyses (5000 iterations) were performed to construct confidence intervals (CI) around AUC values 
+and assess differences in model performance, in which each AUC per sampling was compared in a paired manner across the three models designed above. The null 
+hypothesis of two models exhibiting equivalent performance was rejected if the bootstrap difference did not cross 0 (***, 99.9% CI). NS, not significant. (B) The likelihood 
+of response generated by the TCR + HLA model was dichotomized into “high” and “low” using the median predicted value in this cohort (taken over the MC test sets and 
+averaged per sample) and the Kaplan-Meier curves were shown for PFS, log-rank P = 0.005. (C) Repertoire models fit on CheckMate-038 data were used to conduct repertoire 
+level ensemble inference on two previously published cohorts of patients with skin cancer undergoing treatment with checkpoint blockade. Performance characteristics 
+are shown via ROC curves for both cohorts independently and combined [yost (n = 11), sade (n = 19), and yost + sade (n = 30)]. Bootstrap analyses, as previously described, 
+were performed to construct CIs around AUC values.
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+4 of 11
+Tumor-specific responses show more dynamic changes 
+in nonresponders
+Last, we wanted to understand whether there were any unique 
+dynamic changes of these predictive TCRs. To do this, we first 
+examined, at the clonotype level, the change in frequencies of TCR 
+sequences present in the pre-treatment and on-treatment samples 
+as a function of likelihood of being tumor versus virus specific 
+(Fig. 5F). We noted that while the predicted virus-specific TCRs 
+showed little change between nonresponders and responders, the 
+tumor-specific TCRs found in the pre-treatment samples showed a 
+marked decrease in frequency in nonresponders versus responders 
+and the tumor-specific TCRs found in the post-treatment samples 
+showed a marked increase in frequency in nonresponders versus 
+responders. This finding suggests a more rapid turnover of tumor- 
+versus viral-specific clones in nonresponders versus responders. 
+When aggregating the change in frequencies over each patient, we 
+further observed the same finding in that there was a higher turnover of 
+tumor-specific clones in nonresponders versus responders (Fig. 5G), 
+suggesting a futility of the tumor-specific response in nonresponders 
+and a higher turnover of tumor-specific TCRs in these patients.
+DISCUSSION
+In this work, we sought to understand the T cell repertoire determi-
+nants of response to immunotherapy in the clinical setting along 
+with their potential antigen specificities. While there has been prior 
+work in the field understanding the quantitative aspects of TCR 
+repertoire (i.e., diversity, abundance, etc.), there has yet to be a 
+study of the sequence motifs/concepts in the TCR repertoire that 
+may predict response to immunotherapy. In this work, we use and 
+expand on a previously described set of deep learning algorithms 
+for TCR repertoire analysis to create models that not only predict 
+clinical response but also allow us to understand and propose a 
+biological model that explains the differences in TCR repertoire in 
+responders/nonresponders.
+Much of the prior work in the field of cancer immunology that 
+attempts to understand the antigenic determinants of response to 
+therapy often tackles the problem from the side of the presented 
+epitope/antigen. Computational pipelines are set up to take whole-  
+exome sequencing (WES) data and predict the presented epitope 
+(7–9, 11, 12, 38). However, because of the many sequential steps/
+algorithms that are required to go from mutation to immunologi-
+cally relevant epitope (i.e., expression, proteosomal cleavage, major 
+histocompatibility complex binding, and T cell recognition), these 
+pipelines suffer in accuracy (39– 43). The benefit of interrogating 
+the TCR sequences/repertoire directly is that this is a direct measure-
+ment of the antigen-specific response in an immune response. The 
+hurdle, however, has been to understand the antigenic information 
+encoded in the TCR sequence, and other than direct empirical 
+validation of TCR clones, there has existed no high-throughput, 
+Fig. 3. Unsupervised representation of predictive signature. (A) To provide a descriptive understanding of the T cell response in responders and nonresponders in the 
+CheckMate-038 clinical trial, we sought to characterize the distribution of the TCR repertoire in this cohort of patients. Data from CheckMate-038 were used to train a VAE 
+on all sequence data (incorporating TCR + HLA information) in a sample and class agnostic fashion. The distribution of responders and nonresponders repertoires was 
+visualized via UMAP of the unsupervised VAE featurization (per sample distribution shown in fig. S6). (B) To visualize the distribution of the highly predictive TCR sequences, 
+a per-sequence prediction value was assessed following each MC simulation on the TCR’s within the independent test set, assigning the probability that a given TCR had 
+a responder signature. Over the 100 MC simulations, each sequence in the cohort is assigned multiple prediction values that are averaged over all simulations to serve as a 
+consensus predicted value for each sequence in this cohort of patients. (C) Top 10% of sequences in responders and nonresponders were selected and visualized over the 
+entire cohort and on a per-sample basis (D) where edge color denotes the ground truth label of the sample (nonresponder, red; responder, blue) and average predicted 
+likelihood taken over MC simulations to respond to treatment shown above each patient’s distribution.
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+5 of 11
+Fig. 4. Pre- versus post-treatment TCR repertoire. (A) All three respective models that were trained on pre-treatment repertoires were applied to 35 paired post-treatment 
+TCR repertoires. Performance was then compared via visualizing ROC curves and bootstrapping the AUC to compare pre- versus post-treatment predictive signature. (B) For 
+each pair of pre/post-treatment repertoires, the repertoire-level prediction was compared for pre- versus post-treatment across all trained models. To visualize distribution 
+of predictive sequences, top 10% of predictive sequences in the 35 paired pre/postrepertoires were visualized across all paired samples (C and E) and over the entire 
+cohort (D and F).
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+6 of 11
+efficient method to interrogate the antigen specificity of the TCR 
+sequence. Thus, there has been an effort in the machine learning 
+domain to attempt to extract this antigenic information from the 
+TCR sequence including methods such as DeepTCR (used in this 
+work) (22, 23, 44–50). While the field is still nascent, with more and 
+more data to train these models, they have the potential to completely 
+change how we understand the antigen specificity of immune 
+response directly from the TCR repertoire, thus avoiding highly 
+variable and inaccurate prediction methods that attempt to predict 
+the relevant epitopes. In this work, we demonstrate how methods such 
+as DeepTCR would be used in the future to not only create possible 
+predictive biomarkers in cancer but also to extract meaningful bio-
+logical insights from TCR repertoire.
+In the first part of this study, we first expand on our previous work 
+by integrating HLA into the representation of the TCR sequence. 
+While the TCR sequence can be thought of as containing the infor-
+mation required to understand antigen specificity, it really contains 
+the information about the antigen/epitope in context of HLA. Given 
+the high level of heterogeneity of the HLA alleles in the human popu-
+lation, a TCR sequence cannot be guaranteed to respond to the same 
+epitope/antigen in different individuals. Therefore, we created a method 
+to create a joint representation of TCR sequence and HLA background 
+within which it was observed in. This joint representation then be-
+comes a more complete and reliable measure of the epitope and allows 
+direct comparison of TCR repertoire between HLA-mismatched 
+individuals. When applying this approach to predicting response, 
+Fig. 5. Specificities and dynamics of predictive TCRs. (A) Residue sensitivity logos were created for the top 50 most predictive TCR sequences for responders (CRPR) 
+and nonresponders (SDPD). (B) TCRs were collected from previous publication by Oliveria et al. (36) and are shown in phenotypic (derived from single-cell RNA sequencing) 
+UMAP space and highlighted in red by antigen specificity (tumor- versus virus-specific TCRs), along with corresponding likelihood of response as determined by trained 
+DeepTCR repertoire classifier. Likelihood of response distributions is shown for each class of antigen for the (C) Oliveria et al. (36) dataset and the (D) McPas-TCR database 
+(orange, tumor specific; gray, virus specific). (E) Viral-specific versus MART-1–specific TCRs from McPas-TCR database present in the predictive TCRs from the CheckMate-038 
+cohort are shown within the unsupervised TCR sequence space. Color corresponds to kernel density estimate for that point in sequence space. (F) Clonotype-specific 
+changes in frequency between pre- and post-treatment are shown for TCRs in pre-tx and post-tx samples as a function of likelihood of being virus- versus tumor-specific. 
+Each set of paired box plots represents probability ranges of 10% (i.e., first pair of box plots represents sequences with probability of 0 to 10% of being tumor 
+specific). Mean values for each box plot are denoted with a green triangle. (G) Changes in frequency of sequences in each probability bin were aggregated over each 
+patient and shown as a function of likelihood of being virus versus tumor specific, showing the net change in frequency of a given set of sequences within each patient.
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+7 of 11
+we do find that combining TCR sequence information and HLA 
+background does improve predictive power of the model.
+While the predictive power of the model is a key advantage of 
+our approach in that we are able to aggregate the sum of TCR infor-
+mation in an entire repertoire to predict relevant information about 
+response to therapy, much of the work presented focused on the 
+interpretability of the model with hopes to reveal previously un-
+appreciated biological insights. We first use a VAE, a completely 
+unsupervised method of TCR sequence representation to charac-
+terize and visualize the predictive signature of response. When 
+doing this, we find that our supervised MIL model did in fact pull 
+out the relevant predictive signature from the background “noise” 
+of TCR repertoire. In using an orthogonal method of validation 
+with an unsupervised approach, this gave us further evidence that 
+our supervised model had not become overfit to the data, and 
+when looking at the distribution of the predictive sequences among 
+each patient, we were able to observe the nature of a conserved TCR 
+sequence signature in responders/nonresponders that was shared 
+among multiple patients. This led us to ask the inevitable question 
+about what could be the specificities of these predictive TCR sequenc-
+es. By using two previously published datasets with known TCR to 
+specificity relationships, we found that responders were enriched 
+with a predictive signature that resembled a viral response, while 
+nonresponders were enriched with a signature that resembled a 
+tumor-specific response. While initially unexpected, we reasoned 
+that the viral signature represents a background T cell response 
+within the tumor [as has been validated in other studies (36)], and 
+an accumulation of tumor-specific T cells in the nonresponders is 
+relative to this background viral signature. Along with the previously 
+published dataset that linked TCR sequence not only to antigen 
+specificity but also to phenotype, we reasoned that this accumula -
+tion of tumor-specific T cells represents terminally differentiated 
+effector T cells that may have become dysfunctional, and hence, 
+their accumulation in the nonresponders.
+When studying the dynamics of these antigen-specific responses 
+before and after initiation of immunotherapy, while the antigen-  
+specific signature did not change on therapy, we were surprised to 
+see that there was a higher turnover of tumor-specific T cells in the 
+nonresponders. Taken all these observations together, we propose a 
+biological model of the dynamics and antigen-specific characteristics 
+under immunotherapy and how these characteristics differ between 
+responders and nonresponders to therapy (Fig. 6). Notably, non-
+responders are characterized by an accumulation of dysfunctional 
+tumor-specific T cells that undergo a higher level of turnover when 
+under immunotherapy treatment, suggesting a futility of the ongoing 
+T cell response to the tumor. In contrast, responders maintain the 
+existing tumor-specific response within the tumor and their function 
+is rescued by immunotherapy treatment and thus, the T cells already 
+present in the tumor are able to be effective in their antitumor activity.
+Last, this biological model is consistent with findings already 
+reported in previous transcriptomic studies in the field. In the study 
+by Oliveira et al. (36), nonresponder patients were characterized by 
+an accumulation of high levels of putative tumor-reactive T cells, 
+which were significantly higher in nonresponder patients with 
+melanoma. Such specificities, even if at high frequencies, were not able 
+to confer a productive antitumor response, because of the high level 
+of exhaustion, as measured within the tumor microenvironment 
+through single-cell RNA (36). In line with this view, patients with 
+melanoma with response to checkpoint blockade are characterized 
+higher proportion of putative virus-specific T cells within the tumor 
+specimens, while nonresponders are characterized by the accumu-
+lation of exhausted tumor-infiltrating lymphocytes (35, 36).
+While the findings of this study demonstrate both a method by 
+which to apply interpretable machine learning to TCR repertoire 
+analysis and the biological insights one could appreciate, there are 
+certainly limitations to this work. The most significant limitation of 
+the study is the small size of the training/validation cohorts used in 
+this study. Deep learning models are notorious for their ability to 
+overfit to data, and there is much consideration in training these 
+models so they do not overfit to spurious or irrelevant information. 
+To address this major limitation, we made sure to only assess per-
+formance of the model in the test set during cross-validation. Fur-
+thermore, by corroborating the finding of this predictive sequence 
+signature with a VAE, a completely unsupervised method, we were 
+able to provide further evidence that our supervised model had not 
+overfit to the data. Last, we validated the predictive signature in the 
+original CheckMate-038 cohort in two additional clinical cohorts 
+undergoing treatment with checkpoint blockade, providing further 
+validation of the observed finding.
+When taken together, these findings highlight the utility of methods 
+in deep learning to identify key features of specificity in TCR reper-
+toire and their dynamics under the influence of immunotherapy 
+and how they relate to clinical response. Further work in this area 
+might be able to leverage these described approaches for biomarker 
+development as well as aid in the understanding and development 
+of better targeted treatments in the age of precision oncology.
+METHODS
+CheckMate-038 experimental model and participant details
+CheckMate-038 is a multi-arm, multi-institutional, institutional review 
+board–approved, prospective study (CA209-038; NCT01621490). 
+Fig. 6. Dynamics of tumor-specific T cells under immunotherapy. In the pre-treatment 
+setting, nonresponders to immunotherapy have accumulated tumor-specific dys -
+functional effector T cells. Following initiation of immunotherapy, nonresponders 
+undergo a higher rate of turnover of tumor-specific T cells as compared with 
+responders. Created with BioRender.com.
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+8 of 11
+Patients in parts 2 to 4 received either nivolumab (3 mg/kg) every 
+2 weeks (n = 21) or nivolumab (1 mg/kg) + ipilimumab (3 mg/kg) 
+every 3 weeks × 4 doses and then nivolumab (3 mg/kg) every 
+2 weeks (n = 62), until progression or for a maximum of 2 years. 
+Radiographic assessment of response was performed approximately 
+every 8 weeks until progression. Progression was confirmed with a 
+repeat computed tomography scan typically 4 weeks later. Tumor 
+response for patients was defined by RECIST v1.1. Response to therapy 
+indicates best overall response unless otherwise indicated. All patients 
+underwent biopsy of a metastatic lesion before commencing therapy 
+(1 to 7 days before first dose of therapy). Tumor tissue was divided for 
+formalin-fixation, paraffin embedding (FFPE) or storage with RNA 
+later (Ambion) for subsequent RNA/DNA extraction. PD-L1 ex -
+pression on the tumor cell surface was assessed in FFPE samples at 
+a central laboratory (Dako 28-8 antibody). The clinical trial protocol 
+and its amendments were approved by the relevant institutional 
+review boards, and the study was conducted in accordance with 
+the Declaration of Helsinki and the International Conference on 
+Harmonization Guidelines for Good Clinical Practice. All patients 
+signed written informed consent before having any study proce-
+dures performed.
+CheckMate-038 TCR-seq and HLA data generation
+Tumor biopsy samples were collected before initiation of therapy and 
+stored in RNAlater. DNA was extracted and submitted to Adaptive 
+Biotechnologies for survey-level TCR -chain sequencing, where tar-
+geted amplicon libraries were prepared by multiplex polymerase chain 
+reaction targeting all TCR -chain V/D/J gene segments and sequenced 
+using the Illumina HiSeq system (51,  52). Data for individual TCR 
+sequences, previously analyzed by Anagnostou et al. (21), including 
+V/D/J gene segment identification and CDR3-  sequence, were 
+obtained from Adaptive Biotechnologies for analysis via DeepTCR.  
+Tumor biopsy DNA was also sent for WES (Personal Genome 
+Diagnostics) to determine TMB, and OptiType was used to infer HLA 
+genotype of the patients (53). Data from patients who consented 
+to deposition will be submitted to the European Genome- phenome 
+Archive (21).
+Data curation
+TCR-seq files were collected as raw tsv/csv-formatted files from the 
+various sources cited within the manuscript. Sequencing files were 
+parsed to take the amino acid sequence of the CDR3 after removing 
+unproductive sequences. Clones with different nucleotide sequences 
+but the same amino acid sequence were aggregated together under 
+one amino acid sequence, and their reads were summed to deter-
+mine their relative abundance. Within the parsing code, we addi-
+tionally specified to ignore sequences that used non–International 
+Union of Pure and Applied Chemistry letters (* , X, and O) and 
+removed sequences that were greater than 40 amino acids in length. 
+For the purpose of the algorithm, the maximum length can be 
+altered, but we chose 40 as we did not expect any real sequences to 
+be longer than this length.
+Training DeepTCR repertoire classifier
+To identify a predictive signature of response in the TCR repertoire 
+of the tumor microenvironment before initiation of therapy, we 
+used DeepTCR (v2.1.6), a deep learning framework for revealing 
+sequence concepts within T cell repertoires (22). We make one sig-
+nificant change to the existing software by allowing the incorporation 
+of HLA information within the representation of the TCR. This is 
+accomplished by representing the HLA background that a given 
+TCR is observed within as a categorical multihot encoded variable 
+as an input for the neural network. All other aspects of the approach 
+are as initially described in the original manuscript in which Deep-
+TCR was first presented. Notably, we fit the repertoire classifier on 
+the CheckMate-038 data using TCR sequence information (CDR3- 
+and V/D/J), HLA, or TCR + HLA information provided to demon-
+strate the different types of information each of the inputs contributes 
+to the predictive power of the model. For each type of input that was 
+tested, the same exact train/test splits during MC cross-validation 
+were used as to allow fair comparisons when comparing models 
+trained with different input data. Furthermore, because of the small 
+nature of the CheckMate-038 dataset, training had to be accomplished 
+in a way to prevent overfitting of the repertoire classifier. Therefore, 
+to train the repertoire classifier on these datasets, we used an MC 
+cross-validation where in the hinge loss was used during model 
+training, which prevents the model from further reducing the loss 
+of any given sample below a defined threshold. The idea behind this 
+type of objective function is that once a sample has been predicted 
+sufficiently correct, the network is not encouraged to drop its loss 
+any further and thus reduces overfitting on the training data. Model 
+training with this hinge loss was stopped once a predefined 
+threshold was meet, and in keeping MC cross-validation, model 
+perform was assessed on the testing data of that train/test split. We 
+then used a bootstrapping method where we sampled the MC 
+predictions with replacement 5000 times to approximate a confi-
+dence interval around the AUC. All hyperparameters for the 
+DeepTCR models can be found in the publicly available GitHub 
+repository as provided below in Acknowledgments (Data and 
+materials availability).
+Validation cohorts
+TCR-seq data were collected from two previously published manu-
+scripts denoted as yost (34) and sade (35), which consisted of patients 
+with basal/squamous cell carcinoma and melanoma, respectively. 
+The yost dataset consisted of samples from 11 patients who had 
+TCR-seq available from pre-treatment biopsies and provided available 
+on immuneACCESS, and the sade dataset consisted of samples 
+from 19 patients who had TCR-seq available from pre-treatment 
+biopsies and provided in the original publication materials. Both of 
+these cohorts consisted of patients who were treated with checkpoint 
+blockade therapy and were assessed for clinical response to treat-
+ment via RECIST criteria, in a similar fashion as was performed 
+within the CheckMate-038 cohort. The DeepTCR repertoire classi-
+fiers that fit to the CheckMate-038 cohort were then used to conduct 
+repertoire level inference on the patients within these two indepen-
+dent clinical cohorts, and predictive performance was assessed via 
+ROC and AUC measurements.
+Unsupervised representations via VAE and UMAP
+To provide interpretability of the predictive signature found, we 
+used the DeepTCR VAE to do unsupervised dimensionality reduc-
+tion of all TCRs found in the CheckMate-038 cohort. Each instance 
+into the VAE is defined by a joint representation of CDR3-, V/D/J 
+gene usage, and the HLA background the TCR was found within as 
+previously described. Using the VAE, this input is transformed into 
+a 128-dimensional latent vector before being further reduced to 
+two dimensions via UMAP (default settings for python package 
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+9 of 11
+umap-learn). For the purpose of visualization, because each TCR 
+also has a corresponding frequency associated with it, this informa-
+tion was used to construct two-dimensional histograms to visualize the 
+density of these TCRs in the UMAP latent space.
+Post-treatment inference
+To apply models from the pre-treatment cohort to the post-treatment 
+cohort, we used a method to prevent overinflation of performance 
+characteristics because the pre- and post-treatment samples are 
+highly related (coming from the same patients). To do this, we only 
+used models on individuals in the post-treatment setting that were 
+not trained on those individuals’ pre-treatment tumors. In other 
+words, when the model was trained on a given partition of the 
+pre-treatment data and then was tested on the other partition (test set) 
+of the pre-treatment data and the paired-test set’s post-treatment 
+data. This type of cross-validation prevented the model from making 
+a prediction on a patient it had been trained on, whether it be 
+trained on pre- or post-treatment samples.
+Linking predictive model to known antigen specificity
+To interrogate the antigen specificity of the predictive signatures 
+of response/nonresponse, we collected two previously published 
+datasets that have empiric validation of CDR3 sequences to antigens/
+epitopes. As our clinical cohort consists of patients with melanoma, 
+we first use a melanoma relevant dataset where the authors es-
+tablished links between TCR sequence, antigen specificity, and gene 
+expression phenotype (36). We also use McPas-TCR, a larger 
+dataset with TCR sequences and their known specificities (37). 
+For the melanoma dataset (36), because this dataset had the CDR3- 
+sequence, V/D/J gene usage, and HLA background of the indi-
+viduals, we were able to score each TCR by running it through 
+our pretrained model. In our analysis of the McPas-TCR database, 
+to maximize the overlap of TCRs between our cohort of patients 
+and those found in the database, we cross-matched TCRs from 
+our clinical cohort (with predictive likelihoods) with TCRs in 
+the McPas-TCR database at only the CDR3-  sequence level to 
+assign known antigen-specific TCRs to their likelihood of response/
+nonresponse.
+Clonal dynamics as a function of likelihood  
+of response
+In the CheckMate-038 cohort, because there exists paired pre- and 
+post-treatment biopsies for a subset of the patients, we wanted to 
+interrogate the clonal dynamics in light of information provided by 
+the predictive model of response. To do this, we divided all the TCR 
+sequences into 10 ordinal categories representing the spectrum of 
+virus- to tumor-specific TCRs as predicted by our model. We then 
+further stratified these sequences by whether they were in respond-
+ers (CRPR) or nonresponders (SDPD). We then looked at their 
+clonal dynamics in reference to either their pre- or post-treatment 
+frequencies. For the TCR sequences seen in the pre-treatment biop-
+sies, we looked at their change in frequencies post-treatment with 
+respect to their pre-treatment frequencies, and for the TCR sequences 
+seen in the post-treatment biopsies, we looked at their change in 
+frequencies pre-treatment with respect to their post-treatment fre-
+quencies. To further quantify the dynamics of TCRs at the sample/
+patient level, we aggregated the change in frequencies over each 
+patient across the respective bins along the spectrum of virus- to 
+tumor-specific to output a net change in frequency per patient.
+Statistical tests and machine learning models
+All statistical tests applied to data were implemented with the scipy.
+stats module. Classical machine learning techniques and performance 
+metrics were implemented with scikit-learn.
+SUPPLEMENTARY MATERIALS
+Supplementary material for this article is available at https://science.org/doi/10.1126/
+sciadv.abq5089
+REFERENCES AND NOTES
+ 1. P. Sharma, J. P. Allison, The future of immune checkpoint therapy. Science 348, 56–61 (2015).
+ 2. S. L. Topalian, C. G. Drake, D. M. Pardoll, Immune checkpoint blockade: A common 
+denominator approach to cancer therapy. Cancer Cell 27, 450–461 (2015).
+ 3. D. M. Pardoll, The blockade of immune checkpoints in cancer immunotherapy. Nat. Rev. 
+Cancer 12, 252–264 (2012).
+ 4. F. S. Hodi, S. J. O'Day, D. F. McDermott, R. W. Weber, J. A. Sosman, J. B. Haanen, 
+R. Gonzalez, C. Robert, D. Schadendorf, J. C. Hassel, W. Akerley, A. J. M. van den Eertwegh, 
+J. Lutzky, P. Lorigan, J. M. Vaubel, G. P. Linette, D. Hogg, C. H. Ottensmeier, C. Lebbé, 
+C. Peschel, I. Quirt, J. I. Clark, J. D. Wolchok, J. S. Weber, J. Tian, M. J. Yellin, G. M. Nichol, 
+A. Hoos, W. J. Urba, Improved survival with ipilimumab in patients with metastatic 
+melanoma. N. Engl. J. Med. 363, 711–723 (2010).
+ 5. C. Robert, L. Thomas, I. Bondarenko, S. O'Day, J. Weber, C. Garbe, C. Lebbe, J. F. Baurain, 
+A. Testori, J. J. Grob, N. Davidson, J. Richards, M. Maio, A. Hauschild, W. H. Miller Jr., 
+P. Gascon, M. Lotem, K. Harmankaya, R. Ibrahim, S. Francis, T. T. Chen, R. Humphrey, 
+A. Hoos, J. D. Wolchok, Ipilimumab plus dacarbazine for previously untreated metastatic 
+melanoma. N. Engl. J. Med. 364, 2517–2526 (2011).
+ 6. S. L. Topalian, F. S. Hodi, J. R. Brahmer, S. N. Gettinger, D. C. Smith, D. F. McDermott, 
+J. D. Powderly, R. D. Carvajal, J. A. Sosman, M. B. Atkins, P. D. Leming, D. R. Spigel, 
+S. J. Antonia, L. Horn, C. G. Drake, D. M. Pardoll, L. Chen, W. H. Sharfman, R. A. Anders, 
+J. M. Taube, T. L. McMiller, H. Xu, A. J. Korman, M. Jure-Kunkel, S. Agrawal, D. McDonald, 
+G. D. Kollia, A. Gupta, J. M. Wigginton, M. Sznol, Safety, activity, and immune correlates 
+of anti–PD-1 antibody in cancer. N. Engl. J. Med. 366, 2443–2454 (2012).
+ 7. A. Snyder, V. Makarov, T. Merghoub, J. Yuan, J. M. Zaretsky, A. Desrichard, L. A. Walsh, 
+M. A. Postow, P. Wong, T. S. Ho, T. J. Hollmann, C. Bruggeman, K. Kannan, Y. Li, 
+C. Elipenahli, C. Liu, C. T. Harbison, L. Wang, A. Ribas, J. D. Wolchok, T. A. Chan, Genetic 
+basis for clinical response to CTLA-4 blockade in melanoma. N. Engl. J. Med. 371, 
+2189–2199 (2014).
+ 8. N. A. Rizvi, M. D. Hellmann, A. Snyder, P. Kvistborg, V. Makarov, J. J. Havel, W. Lee, J. Yuan, 
+P. Wong, T. S. Ho, M. L. Miller, N. Rekhtman, A. L. Moreira, F. Ibrahim, C. Bruggeman, 
+B. Gasmi, R. Zappasodi, Y. Maeda, C. Sander, E. B. Garon, T. Merghoub, J. D. Wolchok, 
+T. N. Schumacher, T. A. Chan, Mutational landscape determines sensitivity to PD-1 
+blockade in non–small cell lung cancer. Science 348, 124–128 (2015).
+ 9. E. M. Van Allen, D. Miao, B. Schilling, S. A. Shukla, C. Blank, L. Zimmer, A. Sucker, U. Hillen, 
+M. H. G. Foppen, S. M. Goldinger, J. Utikal, J. C. Hassel, B. Weide, K. C. Kaehler, C. Loquai, 
+P. Mohr, R. Gutzmer, R. Dummer, S. Gabriel, C. J. Wu, D. Schadendorf, L. A. Garraway, 
+Genomic correlates of response to CTLA-4 blockade in metastatic melanoma. Science 
+350, 207–211 (2015).
+ 10. R. M. Samstein, C. H. Lee, A. N. Shoushtari, M. D. Hellmann, R. Shen, Y. Y. Janjigian, 
+D. A. Barron, A. Zehir, E. J. Jordan, A. Omuro, T. J. Kaley, S. M. Kendall, R. J. Motzer, 
+A. A. Hakimi, M. H. Voss, P. Russo, J. Rosenberg, G. Iyer, B. H. Bochner, D. F. Bajorin, 
+H. A. al-Ahmadie, J. E. Chaft, C. M. Rudin, G. J. Riely, S. Baxi, A. L. Ho, R. J. Wong, 
+D. G. Pfister, J. D. Wolchok, C. A. Barker, P. H. Gutin, C. W. Brennan, V. Tabar, 
+I. K. Mellinghoff, L. M. DeAngelis, C. E. Ariyan, N. Lee, W. D. Tap, M. M. Gounder, 
+S. P. D’Angelo, L. Saltz, Z. K. Stadler, H. I. Scher, J. Baselga, P. Razavi, C. A. Klebanoff, 
+R. Yaeger, N. H. Segal, G. Y. Ku, R. P. DeMatteo, M. Ladanyi, N. A. Rizvi, M. F. Berger, N. Riaz, 
+D. B. Solit, T. A. Chan, L. G. T. Morris, Tumor mutational load predicts survival after 
+immunotherapy across multiple cancer types. Nat. Genet. 51, 202–206 (2019).
+ 11. M. Łuksza, N. Riaz, V. Makarov, V. P. Balachandran, M. D. Hellmann, A. Solovyov, N. A. Rizvi, 
+T. Merghoub, A. J. Levine, T. A. Chan, J. D. Wolchok, B. D. Greenbaum, A neoantigen 
+fitness model predicts tumour response to checkpoint blockade immunotherapy. Nature 
+551, 517–520 (2017).
+ 12. N. Riaz, J. J. Havel, V. Makarov, A. Desrichard, W. J. Urba, J. S. Sims, F. S. Hodi, S. Martín-Algarra, 
+R. Mandal, W. H. Sharfman, S. Bhatia, W. J. Hwu, T. F. Gajewski, C. L. Slingluff Jr., D. Chowell, 
+S. M. Kendall, H. Chang, R. Shah, F. Kuo, L. G. T. Morris, J. W. Sidhom, J. P. Schneck, 
+C. E. Horak, N. Weinhold, T. A. Chan, Tumor and microenvironment evolution during 
+immunotherapy with nivolumab. Cell 171, 934–949.e16 (2017).
+ 13. J.-W. Sidhom, C. A. Bessell, J. J. Havel, A. Kosmides, T. A. Chan, J. P. Schneck, Immunomap: 
+A bioinformatics tool for t-cell repertoire analysis. Cancer Immunol. Res. 6, 151–162 
+(2018).
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+10 of 11
+ 14. B. Rousseau, M. B. Foote, S. B. Maron, B. H. Diplas, S. Lu, G. Argilés, A. Cercek, L. A. Diaz Jr., 
+The spectrum of benefit from checkpoint blockade in hypermutated tumors. N. Engl. 
+J. Med. 384, 1168–1170 (2021).
+ 15. S. L. Topalian, J. M. Taube, R. A. Anders, D. M. Pardoll, Mechanism-driven biomarkers to guide 
+immune checkpoint blockade in cancer therapy. Nat. Rev. Cancer 16, 275–287 (2016).
+ 16. S. Ganesan, J. Mehnert, Biomarkers for response to immune checkpoint blockade. 
+Annu. Rev. Cancer Biol. 4, 331–351 (2020).
+ 17. S.-K. Yoo, D. Chowell, C. Valero, L. G. Morris, T. A. Chan, Pre-treatment serum albumin 
+and mutational burden as biomarkers of response to immune checkpoint blockade. 
+NPJ Precis. Oncol. 6, 23 (2022).
+ 18. N. Jacquelot, M. P. Roberti, D. P. Enot, S. Rusakiewicz, N. Ternès, S. Jegou, D. M. Woods, 
+A. L. Sodré, M. Hansen, Y. Meirow, M. Sade-Feldman, A. Burra, S. S. Kwek, C. Flament, 
+M. Messaoudene, C. P. M. Duong, L. Chen, B. S. Kwon, A. C. Anderson, V. K. Kuchroo, 
+B. Weide, F. Aubin, C. Borg, S. Dalle, O. Beatrix, M. Ayyoub, B. Balme, G. Tomasic, 
+A. M. di Giacomo, M. Maio, D. Schadendorf, I. Melero, B. Dréno, A. Khammari, R. Dummer, 
+M. Levesque, Y. Koguchi, L. Fong, M. Lotem, M. Baniyash, H. Schmidt, I. M. Svane, 
+G. Kroemer, A. Marabelle, S. Michiels, A. Cavalcanti, M. J. Smyth, J. S. Weber, 
+A. M. Eggermont, L. Zitvogel, Predictors of responses to immune checkpoint blockade 
+in advanced melanoma. Nat. Commun. 8, 592 (2017).
+ 19. D. Miao, C. A. Margolis, N. I. Vokes, D. Liu, A. Taylor-Weiner, S. M. Wankowicz, D. Adeegbe, 
+D. Keliher, B. Schilling, A. Tracy, M. Manos, N. G. Chau, G. J. Hanna, P. Polak, S. J. Rodig, 
+S. Signoretti, L. M. Sholl, J. A. Engelman, G. Getz, P. A. Jänne, R. I. Haddad, T. K. Choueiri, 
+D. A. Barbie, R. Haq, M. M. Awad, D. Schadendorf, F. S. Hodi, J. Bellmunt, K. K. Wong, 
+P. Hammerman, E. M. van Allen, Genomic correlates of response to immune checkpoint 
+blockade in microsatellite-stable solid tumors. Nat. Genet. 50, 1271–1281 (2018).
+ 20. V. Anagnostou, N. Niknafs, K. Marrone, D. C. Bruhm, J. R. White, J. Naidoo, K. Hummelink, 
+K. Monkhorst, F. Lalezari, M. Lanis, S. Rosner, J. E. Reuss, K. N. Smith, V. Adleff, K. Rodgers, 
+Z. Belcaid, L. Rhymee, B. Levy, J. Feliciano, C. L. Hann, D. S. Ettinger, C. Georgiades, 
+F. Verde, P. Illei, Q. K. Li, A. S. Baras, E. Gabrielson, M. V. Brock, R. Karchin, D. M. Pardoll, 
+S. B. Baylin, J. R. Brahmer, R. B. Scharpf, P. M. Forde, V. E. Velculescu, Multimodal genomic 
+features predict outcome of immune checkpoint blockade in non-small-cell lung cancer. 
+Nat. Cancer 1, 99–111 (2020).
+ 21. V. Anagnostou, D. C. Bruhm, N. Niknafs, J. R. White, X. M. Shao, J. W. Sidhom, J. Stein, 
+H. L. Tsai, H. Wang, Z. Belcaid, J. Murray, A. Balan, L. Ferreira, P. Ross-Macdonald, 
+M. Wind-Rotolo, A. S. Baras, J. Taube, R. Karchin, R. B. Scharpf, C. Grasso, A. Ribas, 
+D. M. Pardoll, S. L. Topalian, V. E. Velculescu, Integrative tumor and immune cell 
+multi-omic analyses predict response to immune checkpoint blockade in melanoma. 
+Cell Rep. Med. 1, 100139 (2020).
+ 22. J.-W. Sidhom, H. B. Larman, D. M. Pardoll, A. S. Baras, DeepTCR is a deep learning framework 
+for revealing sequence concepts within t-cell repertoires. Nat. Commun. 12, (2021).
+ 23. J.-W. Sidhom, A. S. Baras, Deep learning identifies antigenic determinants of severe 
+SARS-CoV-2 infection within t-cell repertoires. Sci. Rep. 11, 14275 (2021).
+ 24. E. Mahe, T. Pugh, S. Kamel-Reid, T cell clonality assessment: Past, present and future. 
+J. Clin. Pathol. 71, 195–200 (2018).
+ 25. L. Robert, J. Tsoi, X. Wang, R. Emerson, B. Homet, T. Chodon, S. Mok, R. R. Huang, 
+A. J. Cochran, B. Comin-Anduix, R. C. Koya, T. G. Graeber, H. Robins, A. Ribas, CTLA4 
+blockade broadens the peripheral T-cell receptor repertoire. Clin. Cancer Res. 20, 
+2424–2432 (2014).
+ 26. P. Kvistborg, D. Philips, S. Kelderman, L. Hageman, C. Ottensmeier, D. Joseph-Pietras, 
+M. J. P. Welters, S. van der Burg, E. Kapiteijn, O. Michielin, E. Romano, C. Linnemann, 
+D. Speiser, C. Blank, J. B. Haanen, T. N. Schumacher, Anti–CTLA-4 therapy broadens 
+the melanoma-reactive CD8+ T cell response. Sci. Transl. Med. 6, 254ra128 (2014).
+ 27. E. Cha, M. Klinger, Y. Hou, C. Cummings, A. Ribas, M. Faham, L. Fong, Improved survival 
+with t cell clonotype stability after anti–CTLA-4 treatment in cancer patients. Sci. Transl. Med. 
+6, 238ra70 (2014).
+ 28. A. C. Hopkins, M. Yarchoan, J. N. Durham, E. C. Yusko, J. A. Rytlewski, H. S. Robins, 
+D. A. Laheru, D. T. Le, E. R. Lutz, E. M. Jaffee, T cell receptor repertoire features associated 
+with survival in immunotherapy-treated pancreatic ductal adenocarcinoma. JCI Insight 3, 
+e122092 (2018).
+ 29. P. C. Tumeh, C. L. Harview, J. H. Yearley, I. P. Shintaku, E. J. M. Taylor, L. Robert, 
+B. Chmielowski, M. Spasic, G. Henry, V. Ciobanu, A. N. West, M. Carmona, C. Kivork, E. Seja, 
+G. Cherry, A. J. Gutierrez, T. R. Grogan, C. Mateus, G. Tomasic, J. A. Glaspy, R. O. Emerson, 
+H. Robins, R. H. Pierce, D. A. Elashoff, C. Robert, A. Ribas, PD-1 blockade induces responses 
+by inhibiting adaptive immune resistance. Nature 515, 568–571 (2014).
+ 30. S. A. Hogan, A. Courtier, P. F. Cheng, N. F. Jaberg-Bentele, S. M. Goldinger, M. Manuel, 
+S. Perez, N. Plantier, J. F. Mouret, T. D. L. Nguyen-Kim, M. I. G. Raaijmakers, P. Kvistborg, 
+N. Pasqual, J. B. A. G. Haanen, R. Dummer, M. P. Levesque, Peripheral blood TCR 
+repertoire profiling may facilitate patient stratification for immunotherapy against 
+melanoma. Cancer Immunol. Res. 7, 77–85 (2019).
+ 31. W. Roh, P.-L. Chen, A. Reuben, C. N. Spencer, P. A. Prieto, J. P. Miller, V. Gopalakrishnan, 
+F. Wang, Z. A. Cooper, S. M. Reddy, C. Gumbs, L. Little, Q. Chang, W.-S. Chen, K. Wani, 
+M. P. De Macedo, E. Chen, J. L. Austin-Breneman, H. Jiang, J. Roszik, M. T. Tetzlaff, 
+M. A. Davies, J. E. Gershenwald, H. Tawbi, A. J. Lazar, P. Hwu, W.-J. Hwu, A. Diab, I. C. Glitza, 
+S. P. Patel, S. E. Woodman, R. N. Amaria, V. G. Prieto, J. Hu, P. Sharma, J. P. Allison, L. Chin, 
+J. Zhang, J. A. Wargo, P. A. Futreal, Integrated molecular analysis of tumor biopsies 
+on sequential CTLA-4 and PD-1 blockade reveals markers of response and resistance. 
+Sci. Transl. Med. 9, eaah3560 (2017).
+ 32. R. N. Amaria, S. M. Reddy, H. A. Tawbi, M. A. Davies, M. I. Ross, I. C. Glitza, J. N. Cormier, 
+C. Lewis, W. J. Hwu, E. Hanna, A. Diab, M. K. Wong, R. Royal, N. Gross, R. Weber, S. Y. Lai, 
+R. Ehlers, J. Blando, D. R. Milton, S. Woodman, R. Kageyama, D. K. Wells, P. Hwu, S. P. Patel, 
+A. Lucci, A. Hessel, J. E. Lee, J. Gershenwald, L. Simpson, E. M. Burton, L. Posada, L. Haydu, 
+L. Wang, S. Zhang, A. J. Lazar, C. W. Hudgens, V. Gopalakrishnan, A. Reuben, 
+M. C. Andrews, C. N. Spencer, V. Prieto, P. Sharma, J. Allison, M. T. Tetzlaff, J. A. Wargo, 
+Neoadjuvant immune checkpoint blockade in high-risk resectable melanoma. Nat. Med. 
+24, 1649–1654 (2018).
+ 33. H. Zhang, L. Liu, J. Zhang, J. Chen, J. Ye, S. Shukla, J. Qiao, X. Zhan, H. Chen, C. J. Wu, 
+Y. X. Fu, B. Li, Investigation of antigen-specific t-cell receptor clusters in human cancers. 
+Clin. Cancer Res. 26, 1359–1371 (2020).
+ 34. K. E. Yost, A. T. Satpathy, D. K. Wells, Y. Qi, C. Wang, R. Kageyama, K. L. McNamara, 
+J. M. Granja, K. Y. Sarin, R. A. Brown, R. K. Gupta, C. Curtis, S. L. Bucktrout, M. M. Davis, 
+A. L. S. Chang, H. Y. Chang, Clonal replacement of tumor-specific t cells following PD-1 
+blockade. Nat. Med. 25, 1251–1259 (2019).
+ 35. M. Sade-Feldman, K. Yizhak, S. L. Bjorgaard, J. P. Ray, C. G. de Boer, R. W. Jenkins, D. J. Lieb, 
+J. H. Chen, D. T. Frederick, M. Barzily-Rokni, S. S. Freeman, A. Reuben, P. J. Hoover, 
+A. C. Villani, E. Ivanova, A. Portell, P. H. Lizotte, A. R. Aref, J. P. Eliane, M. R. Hammond, 
+H. Vitzthum, S. M. Blackmon, B. Li, V. Gopalakrishnan, S. M. Reddy, Z. A. Cooper, 
+C. P. Paweletz, D. A. Barbie, A. Stemmer-Rachamimov, K. T. Flaherty, J. A. Wargo, 
+G. M. Boland, R. J. Sullivan, G. Getz, N. Hacohen, Defining T cell states associated with 
+response to checkpoint immunotherapy in melanoma. Cell 175, 998–1013.e20 (2018).
+ 36. G. Oliveira, K. Stromhaug, S. Klaeger, T. Kula, D. T. Frederick, P. M. le, J. Forman, T. Huang, 
+S. Li, W. Zhang, Q. Xu, N. Cieri, K. R. Clauser, S. A. Shukla, D. Neuberg, S. Justesen, 
+G. MacBeath, S. A. Carr, E. F. Fritsch, N. Hacohen, M. Sade-Feldman, K. J. Livak, 
+G. M. Boland, P. A. Ott, D. B. Keskin, C. J. Wu, Phenotype, specificity and avidity 
+of antitumour CD8+ t cells in melanoma. Nature 596, 119–125 (2021).
+ 37. N. Tickotsky, T. Sagiv, J. Prilusky, E. Shifrut, N. Friedman, McPAS-TCR: A manually curated 
+catalogue of pathology-associated t cell receptor sequences. Bioinformatics 33, 
+2924–2929 (2017).
+ 38. V. P. Balachandran, M. Łuksza, J. N. Zhao, V. Makarov, J. A. Moral, R. Remark, B. Herbst, 
+G. Askan, U. Bhanot, Y. Senbabaoglu, D. K. Wells, C. I. O. Cary, O. Grbovic-Huezo, 
+M. Attiyeh, B. Medina, J. Zhang, J. Loo, J. Saglimbeni, M. Abu-Akeel, R. Zappasodi, N. Riaz, 
+M. Smoragiewicz, Z. L. Kelley, O. Basturk; Australian Pancreatic Cancer Genome Initiative; 
+Garvan Institute of Medical Research; Prince of Wales Hospital; Royal North Shore 
+Hospital; University of Glasgow; St Vincent’s Hospital; QIMR Berghofer Medical Research 
+Institute; University of Melbourne, Centre for Cancer Research; University of Queensland, 
+Institute for Molecular Bioscience; Bankstown Hospital; Liverpool Hospital; Royal Prince 
+Alfred Hospital, Chris O’Brien Lifehouse; Westmead Hospital; Fremantle Hospital; St John 
+of God Healthcare; Royal Adelaide Hospital; Flinders Medical Centre; Envoi Pathology; 
+Princess Alexandria Hospital; Austin Hospital; Johns Hopkins Medical Institutes; ARC-Net 
+Centre for Applied Research on Cancer, M. Gönen, A. J. Levine, P. J. Allen, D. T. Fearon, 
+M. Merad, S. Gnjatic, C. A. Iacobuzio-Donahue, J. D. Wolchok, R. DeMatteo, T. A. Chan, 
+B. D. Greenbaum, T. Merghoub, S. D. Leach, Identification of unique neoantigen qualities 
+in long-term survivors of pancreatic cancer. Nature 551, 512–516 (2017).
+ 39. A. Vitiello, M. Zanetti, Neoantigen prediction and the need for validation. Nat. Biotechnol. 
+35, 815–817 (2017).
+ 40. The problem with neoantigen prediction. Nat. Biotechnol. 35, 97 (2017).
+ 41. S. Paul, D. Weiskopf, M. A. Angelo, J. Sidney, B. Peters, A. Sette, HLA class I alleles are 
+associated with peptide-binding repertoires of different size, affinity, 
+and immunogenicity. J. Immunol. 191, 5831–5839 (2013).
+ 42. J. W. Yewdell, Confronting complexity: Real-world immunodominance in antiviral CD8+ 
+T cell responses. Immunity 25, 533–543 (2006).
+ 43. B. M. Carreno, V. Magrini, M. Becker-Hapak, S. Kaabinejadian, J. Hundal, A. A. Petti, A. Ly, 
+W. R. Lie, W. H. Hildebrand, E. R. Mardis, G. P. Linette, A dendritic cell vaccine increases 
+the breadth and diversity of melanoma neoantigen-specific t cells. Science 348, 803–808 
+(2015).
+ 44. T. Lu, Z. Zhang, J. Zhu, Y. Wang, P. Jiang, X. Xiao, C. Bernatchez, J. V. Heymach, 
+D. L. Gibbons, J. Wang, L. Xu, A. Reuben, T. Wang, Deep learning-based prediction 
+of the T cell receptor–antigen binding specificity. Nat. Mach. Intell. 3, 864–875 (2021).
+ 45. G. Isacchini, A. M. Walczak, T. Mora, A. Nourmohammad, Deep generative selection 
+models of T and B cell receptor repertoires with sonnia. Proc. Natl. Acad. Sci. U.S.A. 118, 
+e2023141118 (2021).
+ 46. D. S. Fischer, Y. Wu, B. Schubert, F. J. Theis, Predicting antigen specificity of single T cells 
+based on TCR CDR3 regions. Mol. Syst. Biol. 16, e9416 (2020).
+Downloaded from https://www.science.org on November 12, 2025
+
+
+Sidhom et al., Sci. Adv. 8, eabq5089 (2022)     16 September 2022
+SCIENCE ADVANCES |  RESEARCH ARTICLE
+11 of 11
+ 47. M. Widrich, B. Schäfl, H. Ramsauer, M. Pavlović, L. Gruber, M. Holzleitner, J. Brandstetter, 
+G. K. Sandve, V. Greiff, S. Hochreiter, G. Klambauer, Modern Hopfield networks and attention 
+for immune repertoire classification, in Advances in Neural Information Processing Systems 33 
+(Curran Associates Inc., 2020), pp. 18832–18845.
+ 48. I. Springer, H. Besser, N. Tickotsky-Moskovitz, S. Dvorkin, Y. Louzoun, Prediction of specific 
+TCR-peptide binding from large dictionaries of TCR-peptide pairs. Front. Immunol. 11, 
+1803 (2020).
+ 49. Y. Tong, J. Wang, T. Zheng, X. Zhang, X. Xiao, X. Zhu, X. Lai, X. Liu, SETE: Sequence-based 
+ensemble learning approach for TCR epitope binding prediction. Comput. Biol. Chem. 87, 
+107281 (2020).
+ 50. A. Montemurro, V. Schuster, H. R. Povlsen, A. K. Bentzen, V. Jurtz, W. D. Chronister, 
+A. Crinklaw, S. R. Hadrup, O. Winther, B. Peters, L. E. Jessen, M. Nielsen, Nettcr-2.0 enables 
+accurate prediction of TCR-peptide binding by using paired TCR and  sequence data. 
+Commun. Biol. 4, 1060 (2021).
+ 51. H. S. Robins, P. V. Campregher, S. K. Srivastava, A. Wacher, C. J. Turtle, O. Kahsai, 
+S. R. Riddell, E. H. Warren, C. S. Carlson, Comprehensive assessment of T-cell receptor 
+-chain diversity in  T cells. Blood 114, 4099–4107 (2009).
+ 52. C. S. Carlson, R. O. Emerson, A. M. Sherwood, C. Desmarais, M. W. Chung, J. M. Parsons, 
+M. S. Steen, M. A. LaMadrid-Herrmannsfeldt, D. W. Williamson, R. J. Livingston, D. Wu, 
+B. L. Wood, M. J. Rieder, H. Robins, Using synthetic templates to design an unbiased 
+multiplex PCR assay. Nat. Commun. 4, 2680 (2013).
+ 53. A. Szolek, B. Schubert, C. Mohr, M. Sturm, M. Feldhahn, O. Kohlbacher, Optitype: Precision 
+HLA typing from next-generation sequencing data. Bioinformatics 30, 3310–3316 
+(2014).
+ 54. J.-W. Sidhom, Deep learning reveals predictive sequence concepts within immune 
+repertoires to immunotherapy (2022); https://doi.org/10.5281/zenodo.6590167.
+Acknowledgments: We thank S. L. Topalian for helpful discussions and critical review of the 
+manuscript and V. Anagnostou and V. Velculescu for generating HLA haplotype data from 
+WES data collected in this study. We also thank the patients and their families for their participation 
+in this study. Funding: We thank Bristol Myers Squibb for sponsoring the CA209-038 clinical 
+trial and for funding the analysis presented in this manuscript, along with The Bloomberg 
+Kimmel Institute for Cancer Immunotherapy, Bloomberg Philanthropies, the Mark Foundation 
+for Cancer Research (19-035-ASP), the Hopkins-BMS Immuno-Oncology Consortium, the 
+philanthropy of S. Wojcicki and D. Troper in support of Computational Pathology at Johns 
+Hopkins, and the NIH Cancer Center Support Grant P30 CA006973 for providing resources to 
+support the work of developing the algorithmic pipelines presented in this manuscript. 
+Author contributions: J.-W.S conceived the project. A.S.B. provided the computational 
+resources to develop the algorithms and run the analyses. J.-W.S. and A.S.B. designed the 
+experiments, conducted the analyses, wrote the manuscript, and created the figures. 
+P.R.-M. and M.W.-R. provided the clinical trial data and oversight of the analysis. G.O. and C.J.W. 
+provided data and interpreted the results. D.M.P. and A.S.B. supervised the project, interpreted 
+the results, and provided editorial and conceptual input into the manuscript. Competing 
+interests: P.R.-M. and M.W.-R. were employees and stockholders for Bristol Myers Squibb at 
+the time this work was completed. M.W.-R. also is a stockholder in Agios Pharmaceuticals. 
+The other authors declare that they have no competing interests. Data and materials 
+availability: All data and code needed to evaluate the conclusions in the paper are present in 
+the paper and/or the Supplementary Materials and can be found at https://github.com/
+sidhomj/DeepTCR_Cancer and https://zenodo.org/record/6590069 (54).
+Submitted 12 April 2022
+Accepted 29 July 2022
+Published 16 September 2022
+10.1126/sciadv.abq5089
+Downloaded from https://www.science.org on November 12, 2025
