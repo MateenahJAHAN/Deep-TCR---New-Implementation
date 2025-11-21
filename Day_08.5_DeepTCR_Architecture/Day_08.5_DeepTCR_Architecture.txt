@@ -1,0 +1,423 @@
+print("🏗️ DeepTCR Architecture Overview:")
+print("\n" + "="*70)
+print("")
+print("INPUT:")
+print("  Patient's TCR repertoire:")
+print("    - 50,000 sequences (amino acid strings)")
+print("    - V/D/J genes for each sequence")
+print("    - Frequencies (how common each sequence is)")
+print("")
+print("LAYER 1: EMBEDDING")
+print("  Converts sequences to numbers:")
+print("    - Sequences → vectors (learned representations)")
+print("    - Like translating words to numbers")
+print("")
+print("LAYER 2: ATTENTION (KEY!)")
+print("  Learns which sequences matter:")
+print("    - Calculates importance scores")
+print("    - Assigns concepts to sequences")
+print("    - Filters out noise")
+print("")
+print("LAYER 3: AGGREGATION")
+print("  Combines information:")
+print("    - Weighted average based on attention")
+print("    - Creates repertoire-level representation")
+print("")
+print("LAYER 4: CLASSIFICATION")
+print("  Makes prediction:")
+print("    - Responder (1) or Non-responder (0)")
+print("    - Probability score (0.0 to 1.0)")
+print("")
+print("OUTPUT:")
+print("  Prediction: Will patient respond?")
+print("  Attention weights: Which sequences matter?")
+print("")
+print("="*70)
+print("\nBiology: Architecture finds patterns in immune repertoires")
+print("CS: Neural network learns complex relationships")
+
+import numpy as np
+
+print("🔢 Embedding Layer:")
+print("\n" + "="*70)
+print("")
+print("Step 1: One-Hot Encoding (from Day 5)")
+print("  Sequence: 'CASSLAPG'")
+print("  → One-hot matrix: (8, 20) - 8 positions, 20 amino acids")
+print("  → Flattened: (160,) - 8 × 20 = 160 features")
+print("")
+print("Step 2: Embedding (Learned)")
+print("  One-hot: (160,) - sparse (mostly zeros)")
+print("  → Embedding: (128,) - dense, learned representation")
+print("  → More meaningful! Network learns what matters")
+print("")
+print("Example:")
+print("  Input sequence: 'CASSLAPG' (string)")
+print("  → One-hot: [0,1,0,...,0,1,0,...] (160 numbers, mostly 0s)")
+print("  → Embedding: [0.2, -0.1, 0.5, ...] (128 numbers, learned)")
+print("")
+print("="*70)
+print("\nBiology: Embedding captures sequence meaning")
+print("CS: Learned representation better than one-hot")
+
+# TODO: Visualize embedding concept
+# Show how one sequence becomes an embedding
+
+# Example: One sequence
+sequence = "CASSLAPG"
+print(f"Input sequence: {sequence}")
+print(f"  Length: {len(sequence)} amino acids")
+
+# One-hot encoding (from Day 5)
+AA_ALPHABET = 'ACDEFGHIKLMNPQRSTVWY'
+aa_to_idx = {aa: idx for idx, aa in enumerate(AA_ALPHABET)}
+
+# TODO: Create one-hot encoding
+# Hint: Similar to Day 5
+# Write your code here:
+# one_hot = ... (shape: len(sequence), 20)
+
+
+# Flatten
+# TODO: Flatten one-hot
+# Hint: .flatten() or .reshape(-1)
+# Write your code here:
+# one_hot_flat = ... (shape: len(sequence) * 20)
+
+
+# Simulated embedding (in real network, this is learned)
+# TODO: Create simulated embedding
+# Hint: np.random.randn(128) - this simulates learned embedding
+# In real network, embedding is learned during training!
+# Write your code here:
+# embedding = ... (shape: 128)
+
+
+print(f"\nShape transformations:")
+print(f"  Sequence (string): length {len(sequence)}")
+# print(f"  One-hot: {one_hot.shape}")
+# print(f"  One-hot flattened: {one_hot_flat.shape}")
+# print(f"  Embedding: {embedding.shape}")
+
+print(f"\nBiology: Embedding captures biological meaning")
+print(f"CS: Learned representation is more efficient")
+
+print("🎯 Attention Mechanism (Detailed):")
+print("\n" + "="*70)
+print("")
+print("What Attention Does:")
+print("  1. Looks at all sequences")
+print("  2. Calculates importance score for each sequence")
+print("  3. Normalizes scores (makes them sum to 1)")
+print("  4. Uses scores as weights")
+print("  5. Takes weighted average")
+print("")
+print("Key Insight:")
+print("  - Importance scores are LEARNED during training")
+print("  - Model learns: 'This sequence pattern predicts response'")
+print("  - Different patients → different important sequences")
+print("")
+print("Example:")
+print("  Patient has 50,000 sequences")
+print("  Attention calculates: [0.001, 0.05, 0.001, ..., 0.02, ...]")
+print("  High scores (0.05) = important sequences")
+print("  Low scores (0.001) = irrelevant sequences")
+print("")
+print("="*70)
+print("\nBiology: Attention finds the 'important' T cells!")
+print("CS: Learned weighting mechanism")
+
+# Visualize embedding concept
+# Show how one sequence becomes an embedding
+
+import numpy as np
+
+# Example: One sequence
+sequence = "CASSLAPG"
+print(f"Input sequence: {sequence}")
+print(f"  Length: {len(sequence)} amino acids")
+
+# One-hot encoding (from Day 5)
+AA_ALPHABET = 'ACDEFGHIKLMNPQRSTVWY'
+aa_to_idx = {aa: idx for idx, aa in enumerate(AA_ALPHABET)}
+
+# ✅ Starter solution
+# Create one-hot encoding
+max_length = 40
+one_hot = np.zeros((max_length, len(AA_ALPHABET)), dtype=int)
+for i, aa in enumerate(sequence):
+    if i < max_length and aa in aa_to_idx:
+        one_hot[i, aa_to_idx[aa]] = 1
+
+# Flatten
+one_hot_flat = one_hot.flatten()
+
+# Simulated embedding (in real network, this is learned)
+embedding = np.random.randn(128)  # Simulates learned embedding
+
+print(f"\nShape transformations:")
+print(f"  Sequence (string): length {len(sequence)}")
+print(f"  One-hot: {one_hot.shape}")
+print(f"  One-hot flattened: {one_hot_flat.shape}")
+print(f"  Embedding: {embedding.shape}")
+
+print(f"\nBiology: Embedding captures biological meaning")
+print(f"CS: Learned representation is more efficient")
+
+# TODO: Replace starter code above with your own implementation
+
+
+print("💡 Understanding 'Concepts' (num_concepts=64):")
+print("\n" + "="*70)
+print("")
+print("What Are Concepts?")
+print("  - Learned patterns in TCR sequences")
+print("  - Like categories or themes")
+print("  - Paper uses: num_concepts = 64")
+print("")
+print("Example Concepts:")
+print("  Concept 1: Sequences that recognize tumor antigens")
+print("  Concept 2: Sequences that recognize viral antigens")
+print("  Concept 3: Sequences with specific V gene patterns")
+print("  ... (64 total concepts)")
+print("")
+print("How It Works:")
+print("  1. Model learns 64 concept patterns")
+print("  2. Each sequence gets assigned to concepts")
+print("  3. Attention uses concepts to weight sequences")
+print("  4. Concepts help organize the repertoire")
+print("")
+print("Why 64?")
+print("  - Enough to capture diversity")
+print("  - Not too many (avoids overfitting)")
+print("  - Paper found this works well")
+print("")
+print("="*70)
+print("\nBiology: Concepts organize sequences into meaningful groups")
+print("CS: Learned clustering/categorization")
+
+# TODO: Visualize concept assignment
+# Show how sequences get assigned to concepts
+
+# Example: 10 sequences, 64 concepts
+num_sequences = 10
+num_concepts = 64
+
+print(f"Example: {num_sequences} sequences, {num_concepts} concepts")
+print(f"")
+print(f"Concept Assignment:")
+print(f"  Each sequence → assigned to one or more concepts")
+print(f"  Assignment is LEARNED during training")
+print(f"")
+
+# TODO: Create example concept assignments
+# In real network, this is learned!
+# For visualization, create example:
+# concept_assignments = np.random.rand(num_sequences, num_concepts)
+# concept_assignments = concept_assignments / concept_assignments.sum(axis=1, keepdims=True)  # Normalize
+# Write your code here:
+
+
+# Show which concepts each sequence belongs to
+# print(f"\nExample assignments:")
+# for i in range(min(5, num_sequences)):
+#     top_concepts = np.argsort(concept_assignments[i])[-3:][::-1]
+#     print(f"  Sequence {i+1}: Top concepts {top_concepts}")
+
+print(f"\nBiology: Concepts group similar sequences")
+print(f"CS: Learned categorization helps attention")
+
+print("🔄 Forward Pass: How Data Flows Through Network")
+print("\n" + "="*70)
+print("")
+print("Step 1: INPUT")
+print("  Patient has 50,000 TCR sequences")
+print("  Shape: (50,000 sequences, features per sequence)")
+print("")
+print("Step 2: EMBEDDING LAYER")
+print("  Each sequence → embedding vector")
+print("  Shape: (50,000, 128) - 50k sequences, 128-dim embeddings")
+print("")
+print("Step 3: ATTENTION LAYER")
+print("  Calculates importance for each sequence")
+print("  Assigns sequences to concepts")
+print("  Shape: (50,000,) - attention weights")
+print("  Concepts: (50,000, 64) - concept assignments")
+print("")
+print("Step 4: AGGREGATION")
+print("  Weighted average based on attention")
+print("  Shape: (128,) - one vector per patient")
+print("")
+print("Step 5: CLASSIFICATION")
+print("  Patient vector → prediction")
+print("  Shape: (1,) - probability score")
+print("")
+print("OUTPUT:")
+print("  Prediction: 0.82 (82% chance of response)")
+print("  Attention weights: Which sequences mattered")
+print("")
+print("="*70)
+print("\nBiology: Network finds patterns in immune repertoire")
+print("CS: Data flows through layers, gets transformed")
+
+# TODO: Create simplified forward pass example
+# This shows conceptually how data flows
+
+import numpy as np
+
+# Simulate one patient with simplified data
+num_sequences = 1000  # Simplified (real: 50,000)
+embedding_dim = 128
+num_concepts = 64
+
+print(f"Forward Pass Example (Simplified):")
+print(f"\nInput: {num_sequences} sequences")
+print(f"  Shape: ({num_sequences}, features)")
+
+# ✅ Starter solution
+# Step 1: Embeddings (simulated)
+embeddings = np.random.randn(num_sequences, embedding_dim)
+print(f"\nAfter Embedding:")
+print(f"  Shape: {embeddings.shape}")
+
+# Step 2: Attention scores (simulated)
+attention_scores = np.random.rand(num_sequences)
+attention_weights = attention_scores / attention_scores.sum()
+print(f"\nAfter Attention:")
+print(f"  Attention weights shape: {attention_weights.shape}")
+print(f"  Sum of weights: {attention_weights.sum():.3f} (should be 1.0)")
+
+# Step 3: Aggregation
+if embeddings is not None and attention_weights is not None:
+    # TODO: Calculate weighted average
+    # Write your code here:
+    # patient_vector = np.average(embeddings, axis=0, weights=attention_weights)
+    
+    # ✅ Starter solution
+    patient_vector = np.average(embeddings, axis=0, weights=attention_weights)
+    print(f"\nAfter Aggregation:")
+    print(f"  Patient vector shape: {patient_vector.shape}")
+
+    # Step 4: Classification (simulated)
+    # TODO: Simulate prediction
+    # Write your code here:
+    # prediction = np.random.rand()  # Simulated
+    
+    # ✅ Starter solution
+    prediction = np.random.rand()  # Simulated
+    print(f"\nAfter Classification:")
+    print(f"  Prediction: {prediction:.3f} (probability of response)")
+
+    print(f"\nBiology: Network processes entire repertoire")
+    print(f"CS: Forward pass transforms data step by step")
+else:
+    print("\n⚠️ Complete the TODOs above to see forward pass!")
+    print("  Steps: 1) Create embeddings, 2) Calculate attention_weights, 3) Aggregate, 4) Predict")
+
+# TODO: Replace starter code above with your own implementation
+
+
+print("⚙️ Key Network Parameters (from source code):")
+print("\n" + "="*70)
+print("")
+print("1. num_concepts = 64")
+print("   - Number of learned patterns/concepts")
+print("   - More concepts = more patterns, but risk overfitting")
+print("   - Paper uses 64 (found to work well)")
+print("")
+print("2. size_of_net = 'small'")
+print("   - Network size/complexity")
+print("   - Options: 'small', 'medium', 'large'")
+print("   - Smaller = faster, less overfitting")
+print("   - Paper uses 'small' (works well for this data)")
+print("")
+print("3. epochs_min = 10")
+print("   - Minimum number of training epochs")
+print("   - Epoch = one pass through all data")
+print("   - More epochs = more learning, but risk overfitting")
+print("")
+print("4. hinge_loss_t = 0.3")
+print("   - Loss function parameter")
+print("   - Controls how model learns")
+print("   - Technical detail (you don't need to understand deeply)")
+print("")
+print("5. batch_size = 10")
+print("   - How many patients per batch")
+print("   - Smaller = more updates, but slower")
+print("   - Larger = faster, but less frequent updates")
+print("")
+print("="*70)
+print("\nBiology: Parameters control what patterns model learns")
+print("CS: Hyperparameters tune model behavior")
+
+print("🧠 What the Model Learns:")
+print("\n" + "="*70)
+print("")
+print("During Training:")
+print("  1. Model sees patient repertoires + response labels")
+print("  2. Makes predictions")
+print("  3. Compares predictions to true labels")
+print("  4. Updates weights to improve predictions")
+print("  5. Repeats many times (epochs)")
+print("")
+print("What Gets Learned:")
+print("  ✓ Embedding weights: How to represent sequences")
+print("  ✓ Attention weights: Which sequences are important")
+print("  ✓ Concept patterns: What patterns predict response")
+print("  ✓ Classification weights: How to make final prediction")
+print("")
+print("Key Insight:")
+print("  - Model LEARNS what matters (not programmed!)")
+print("  - Discovers patterns humans might miss")
+print("  - Different for each patient (attention adapts)")
+print("")
+print("="*70)
+print("\nBiology: Model discovers predictive sequence patterns")
+print("CS: Backpropagation learns optimal weights")
+
+# TODO: Create ASCII art diagram of architecture
+# This helps visualize the network
+
+print("📊 DeepTCR Architecture Diagram:")
+print("\n" + "="*70)
+print("")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ INPUT: Patient Repertoire                                │")
+print("│  50,000 sequences                                        │")
+print("│  Shape: (50k, features)                                 │")
+print("└─────────────────────────────────────────────────────────┘")
+print("                          ↓")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ LAYER 1: EMBEDDING                                      │")
+print("│  Sequences → Learned vectors                            │")
+print("│  Shape: (50k, 128)                                      │")
+print("└─────────────────────────────────────────────────────────┘")
+print("                          ↓")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ LAYER 2: ATTENTION (KEY!)                               │")
+print("│  Learns importance scores                                │")
+print("│  Assigns to 64 concepts                                  │")
+print("│  Shape: (50k,) weights, (50k, 64) concepts              │")
+print("└─────────────────────────────────────────────────────────┘")
+print("                          ↓")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ LAYER 3: AGGREGATION                                    │")
+print("│  Weighted average                                        │")
+print("│  Shape: (128,) - one vector per patient                 │")
+print("└─────────────────────────────────────────────────────────┘")
+print("                          ↓")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ LAYER 4: CLASSIFICATION                                 │")
+print("│  Patient vector → Prediction                            │")
+print("│  Shape: (1,) - probability score                        │")
+print("└─────────────────────────────────────────────────────────┘")
+print("                          ↓")
+print("┌─────────────────────────────────────────────────────────┐")
+print("│ OUTPUT: Prediction                                      │")
+print("│  Probability: 0.82 (82% chance of response)             │")
+print("│  Attention weights: Which sequences mattered            │")
+print("└─────────────────────────────────────────────────────────┘")
+print("")
+print("="*70)
+print("\nBiology: Architecture finds patterns in immune repertoires")
+print("CS: Neural network processes data through layers")
