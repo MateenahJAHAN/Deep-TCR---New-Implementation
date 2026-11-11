@@ -544,3 +544,15 @@ If you use this tutorial or reproduce the results, please cite the original pape
 *Last updated: December 2024*  
 *All notebooks tested and verified - every cell executes successfully!*  
 *For questions, check the day-specific notebooks or the docs folder.*
+
+<!-- portfolio-navigation -->
+## Repository guide
+
+- **Code and notebooks** · [Day_00_Getting_Started.ipynb](Day_00_Getting_Started/Day_00_Getting_Started.ipynb), [Day_01_Setup.ipynb](Day_01_Setup/Day_01_Setup.ipynb), [Day_02_Explore_Data.ipynb](Day_02_Explore_Data/Day_02_Explore_Data.ipynb), [Day_03_Clean_Data.ipynb](Day_03_Clean_Data/Day_03_Clean_Data.ipynb), [Day_04_Understand_Data.ipynb](Day_04_Understand_Data/Day_04_Understand_Data.ipynb)
+- **Data** · [data](data)
+- **Figures and images** · [tcr_repertoire_analysis.png](tcr_repertoire_analysis.png)
+- **Papers and reports** · [paper.pdf](docs/paper.pdf)
+- **Documentation and notes** · [FINAL_REVIEW_SUMMARY.md](FINAL_REVIEW_SUMMARY.md), [LEARNING_ROADMAP.md](LEARNING_ROADMAP.md), [START_HERE.md](START_HERE.md), [docs](docs)
+
+<!-- /portfolio-navigation -->
+
